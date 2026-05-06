@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@import './variables.css';
+@import './layout.css';
+@import './typography.css';
+
+
+@plugin '@tailwindcss/typography';

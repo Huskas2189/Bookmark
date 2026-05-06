@@ -1,0 +1,7 @@
+:root {
+    --header-height: 64px;
+}
+
+@theme {
+    --spacing: 1rem;
+}
