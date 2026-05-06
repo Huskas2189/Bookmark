@@ -3,14 +3,13 @@
   import Icon from "$lib/components/Icon.svelte";
 
   const uid = $props.id();
-  const {key, app }: {
-    key: string,
+  const { app }: {
     app: App
   } = $props();
 </script>
 
-<article id="{key}-{uid}" class="bookmark">
-    <Icon icon={app.icon ?? key} alt={key}></Icon>
+<article id="{app.id}-{uid}" class="bookmark">
+    <Icon icon={app.icon ?? app.id} alt={app.name}></Icon>
     <h2>
         <a href={app.url} aria-label="Open {app.name}">
             { app.name }
@@ -22,11 +21,11 @@
     @reference '../style/_style.css';
 
     article {
-        @apply p-1;
+        @apply p-2;
         @apply w-full;
         @apply text-center;
 
-        @apply rounded-md shadow-md;
+        @apply card;
 
         @apply relative;
         @apply flex flex-col items-center;
@@ -36,7 +35,7 @@
         }
 
         h2 {
-            @apply p-1 pb-0;
+            @apply p-2 pb-0;
         }
 
         a {

@@ -7,8 +7,8 @@
 
 
 <div class="bookmark-container">
-    {#each Object.entries(data.config) as [key, app]}
-        <App key={key} app={app} ></App>
+    {#each data.apps as app}
+        <App {app} ></App>
     {/each}
 </div>
 
@@ -18,7 +18,7 @@
     .bookmark-container {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
         @apply place-content-center;
-        @apply gap-2;
+        @apply gap-4;
         @apply mx-auto;
     }
 
