@@ -1,9 +1,10 @@
 
 import { CONFIG_FILE_PATH } from '$env/static/private';
-import type { Config as ConfigModel, App } from '../models/config.ts'
+import type {Config as ConfigModel, App} from '../models/config.ts'
 
 import fs from 'node:fs';
 import yaml from 'js-yaml';
+import type {AuthType} from "$lib/server/auth/auth.ts";
 
 let config: ConfigModel;
 
@@ -21,12 +22,12 @@ function loadConfig(): ConfigModel {
   }
 }
 
-function getConfig(key: 'title'|'apps'): any {
+export function getConfig(key: string): any {
   if (typeof config === 'undefined') {
     config = loadConfig();
   }
 
-  return config[key];
+  return config[key] ?? null;
 }
 
 export function getTitle(): string {
@@ -36,4 +37,8 @@ export function getTitle(): string {
 
 export function getApps(): App[] {
   return getConfig('apps');
+}
+
+export function getAuthType(): AuthType {
+  return getConfig('auth');
 }

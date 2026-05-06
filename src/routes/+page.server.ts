@@ -1,12 +1,8 @@
 import {getApps} from "$lib/server/config.ts";
 import type {PageServerLoad} from './$types';
 
-function getUserApps() {
-  return getApps();
-}
-
-export const load: PageServerLoad = ({ params }) => {
+export const load: PageServerLoad = ({ locals }) => {
   return {
-    config: getUserApps()
+    apps: locals.apps
   };
 };
