@@ -1,3 +1,3 @@
 # bookmark
 
-Simple dashboards with only bookmarks 
+Simple dashboards with only bookmarks

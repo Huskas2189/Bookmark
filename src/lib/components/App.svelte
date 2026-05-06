@@ -22,13 +22,22 @@
     @reference '../style/_style.css';
 
     article {
-        @apply border-1 rounded-md;
         @apply p-1;
         @apply w-full;
         @apply text-center;
 
+        @apply rounded-md shadow-md;
+
         @apply relative;
         @apply flex flex-col items-center;
+
+        &:hover {
+            @apply shadow-lg/20;
+        }
+
+        h2 {
+            @apply p-1 pb-0;
+        }
 
         a {
             &::after {

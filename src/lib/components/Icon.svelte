@@ -14,8 +14,9 @@
 <img src={getUrl()} alt={alt} />
 
 <style>
+    @reference '../style/_style.css';
+
     img {
-        height: 8rem;
-        width: auto;
+        @apply h-6 w-auto;
     }
 </style>
