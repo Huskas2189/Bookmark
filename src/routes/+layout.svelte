@@ -25,6 +25,7 @@
         /*@apply mx-auto my-auto;*/
         height: var(--header-height);
 
+        @apply z-50;
         @apply shadow-lg;
         @apply backdrop-blur-lg;
         @apply bg-white/20;
@@ -32,7 +33,7 @@
 
     main {
         @apply flex items-center;
-        @apply p-3;
+
         min-height: calc(100vh - var(--header-height));
     }
 

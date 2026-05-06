@@ -16,7 +16,8 @@
     @reference '../style/_style.css';
 
     .bookmark-container {
-        @apply flex grid-flow-col justify-center items-stretch;
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
+        @apply place-content-center;
         @apply gap-2;
         @apply mx-auto;
     }
