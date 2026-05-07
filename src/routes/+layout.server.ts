@@ -1,12 +1,8 @@
-import {getApps, getTitle} from "$lib/server/config.ts";
-import type {LayoutServerData} from './$types';
-
-function getUserApps() {
-  return getApps();
-}
+import { getTitle } from '$lib/server/config.ts';
+import type { LayoutServerData } from './$types';
 
 export const load: LayoutServerData = () => {
-  return {
-    title: getTitle()
-  };
+    return {
+        title: getTitle()
+    };
 };

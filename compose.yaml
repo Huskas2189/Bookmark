@@ -2,14 +2,14 @@
 name: bookmark
 
 services:
-  ui:
-    container_name: bookmark
-    image: node:lts
-    working_dir: /app
-    volumes:
-      - ./:/app
-    tty: true
-    environment:
-      CONFIG_FILE_PATH: /app/config/config.yaml
-    ports:
-      - "5173:5173"
+    ui:
+        container_name: bookmark
+        image: node:lts
+        working_dir: /app
+        volumes:
+            - ./:/app
+        tty: true
+        environment:
+            CONFIG_FILE_PATH: /app/config/config.yaml
+        ports:
+            - '5173:5173'

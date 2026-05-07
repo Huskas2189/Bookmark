@@ -1,18 +1,20 @@
 <script lang="ts">
-  import type {App} from "$lib/models/config.ts";
-  import Icon from "$lib/components/Icon.svelte";
+    import type { App } from '$lib/models/config.ts';
+    import Icon from '$lib/components/Icon.svelte';
 
-  const uid = $props.id();
-  const { app }: {
-    app: App
-  } = $props();
+    const uid = $props.id();
+    const {
+        app
+    }: {
+        app: App;
+    } = $props();
 </script>
 
 <article id="{app.id}-{uid}" class="bookmark">
     <Icon icon={app.icon ?? app.id} alt={app.name}></Icon>
     <h2>
         <a href={app.url} aria-label="Open {app.name}">
-            { app.name }
+            {app.name}
         </a>
     </h2>
 </article>
@@ -40,7 +42,7 @@
 
         a {
             &::after {
-                content: "";
+                content: '';
                 position: absolute;
                 inset: 0;
             }
@@ -51,5 +53,4 @@
             }
         }
     }
-
 </style>
