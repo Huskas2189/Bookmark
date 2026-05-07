@@ -1,14 +1,13 @@
 <script lang="ts">
     import type { PageProps } from './$types';
-    import App from "$lib/components/App.svelte";
+    import App from '$lib/components/App.svelte';
 
     let { data }: PageProps = $props();
 </script>
 
-
 <div class="bookmark-container">
     {#each data.apps as app}
-        <App {app} ></App>
+        <App {app}></App>
     {/each}
 </div>
 
@@ -21,5 +20,4 @@
         @apply gap-4;
         @apply mx-auto;
     }
-
 </style>
