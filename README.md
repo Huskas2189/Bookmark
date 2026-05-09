@@ -98,10 +98,9 @@ description: My personal homelab dashboard
 #### auth
 
 The auth field defines the authentication method.
-Currently, the only supported value is `basic_auth`
+Currently, the only supported value are `basic_auth` and `forward_auth`
 
-OpenID Connect and Forward Auth support are planned,
-so Bookmark can integrate with services such as Authelia or Authentik.
+Next integrated provider will be OpenId.
 
 #### apps
 
@@ -130,7 +129,16 @@ apps:
 
 #### users
 
-The users section defines who can access Bookmark.
+The `users` section is required when `auth` is set to `basic_auth`.
+
+When `auth` is set to `forward_auth`, this section is ignored.
+In that mode, the authenticated user and their groups are provided by the reverse proxy using these headers:
+
+- `Remote-User`
+- `Remote-Name`
+- `Remote-Groups`
+
+With `basic_auth`, the `users` section defines who can access Bookmark.
 
 Each user requires:
 
