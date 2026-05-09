@@ -1,4 +1,4 @@
-import { CONFIG_FILE_PATH } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { Config as ConfigModel, App } from '../models/config.ts';
 
 import fs from 'node:fs';
@@ -9,12 +9,12 @@ let config: ConfigModel;
 
 function loadConfig(): ConfigModel {
     try {
-        const file = fs.readFileSync(CONFIG_FILE_PATH, 'utf8');
+        const file = fs.readFileSync(env.CONFIG_FILE, 'utf8');
 
         return yaml.load(file, {});
     } catch (error) {
         if (error.code === 'ENOENT') {
-            console.error(`Le fichier ${CONFIG_FILE_PATH} est introuvable.`);
+            console.error(`Le fichier ${env.CONFIG_FILE} est introuvable.`);
         } else {
             throw error;
         }

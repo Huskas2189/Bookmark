@@ -1,0 +1,32 @@
+# Docker itsel
+Dockerfile
+.dockerignore
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Dev Configs
+.npmrc
+.prettierrc
+.eslintrc.cjs
+.editorconfig
+.prettierignore
+.svelte-kit
+eslint.config.js
+
+# IDE
+.vscode/
+.idea/
+
+# Potentially custom dev
+node_modules/
+build/
+package/
+
+# Potentially dev config
+config/
+
+# Dotenv
+**/.env
