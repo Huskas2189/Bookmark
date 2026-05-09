@@ -1,0 +1,109 @@
+name: Docker Build
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  gitversion:
+    runs-on: docker
+    container: gittools/gitversion:6.7.0-alpine.3.23-10.0
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout
+        run: |
+          set -eu
+          cd "$FORGEJO_WORKSPACE"
+
+          git init
+          git remote add origin "${FORGEJO_SERVER_URL}/${FORGEJO_REPOSITORY}.git"
+
+          git -c credential.helper='!f() {
+            echo username=forgejo-actions
+            echo password=${FORGEJO_TOKEN}
+          }; f' fetch --tags --force --prune origin
+
+          git checkout --detach "$FORGEJO_SHA"
+
+      - name: Deps
+        run: |
+          apk add --no-cache \
+            jq
+
+      - name: Get Version
+        id: version
+        run: |
+          VERSION=$(/tools/dotnet-gitversion /output json | jq -r '.SemVer')
+          echo "version=$VERSION" >> "$FORGEJO_OUTPUT"
+
+      - name: Display Version
+        run: |
+          echo "Version: ${{ steps.version.outputs.version }}"
+
+  build-image:
+    runs-on: docker
+    container:
+      image: docker:28-cli
+    needs:
+      - gitversion
+    env:
+      CODEBERG_URL: "codeberg.org"
+      REPO_URL: "codeberg.org/huskas-2189/bookmark"
+    steps:
+      - name: Install Deps
+        run: |
+          apk add --no-cache \
+            git \
+            ca-certificates \
+            jq
+
+      - name: Set Up Git
+        run: |
+          git config --global user.name "${FORGEJO_ACTOR}"
+          git config --global user.email "bookmark-pipeline@no-reply"
+
+      - name: Checkout
+        run: |
+          set -eu
+          cd "$FORGEJO_WORKSPACE"
+
+          LOGGED_REPO_URL="https://${FORGEJO_ACTOR}:${FORGEJO_TOKEN}@${REPO_URL}.git"
+
+          git init
+          git remote add origin "${LOGGED_REPO_URL}"
+
+          git -c credential.helper='!f() {
+            echo username=forgejo-actions
+            echo password=${FORGEJO_TOKEN}
+          }; f' fetch --tags --force --prune origin
+
+          git checkout --detach "$FORGEJO_SHA"
+
+      - name: Tag
+        run: |
+          git tag ${{ needs.gitversion.outputs.version }}
+          git push --tags
+
+      - name: Login registry
+        run: |
+          echo ${{ secrets.REGISTRY_TOKEN }} | docker login ${CODEBERG_URL} \
+            --username "${FORGEJO_ACTOR}" \
+            --password-stdin
+
+      - name: Build Image
+        run: |
+          docker build --no-cache -t bookmark_tmp --build-arg VERSION=${{ needs.gitversion.outputs.version }} .
+          docker image tag bookmark_tmp ${REPO_URL}:latest
+          docker image tag bookmark_tmp ${REPO_URL}:${{ needs.gitversion.outputs.version }}
+
+      - name: Push Image to registry
+        run: |
+          docker image push --all-tags ${REPO_URL}
+
+      - name: Clean up
+        run: |
+          docker rmi ${REPO_URL}:${{ needs.gitversion.outputs.version }}
+          docker rmi ${REPO_URL}:latest
+          docker rmi bookmark_tmp
+          docker logout ${CODEBERG_URL}

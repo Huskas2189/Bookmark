@@ -10,6 +10,6 @@ services:
             - ./:/app
         tty: true
         environment:
-            CONFIG_FILE_PATH: /app/config/config.yaml
+            CONFIG_FILE: /app/config/config.yaml
         ports:
             - '5173:5173'

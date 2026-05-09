@@ -12,3 +12,6 @@ insert_final_newline = false
 
 [package.json]
 indent_style = space
+
+[{*.yaml,*.yml}]
+indent_size = 2
