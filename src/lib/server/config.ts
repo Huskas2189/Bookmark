@@ -33,6 +33,10 @@ export function getTitle(): string {
     return getConfig('title');
 }
 
+export function getDescription(): string|null {
+    return getConfig('description') ?? null;
+}
+
 export function getApps(): App[] {
     return getConfig('apps');
 }

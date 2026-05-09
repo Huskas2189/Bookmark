@@ -66,6 +66,7 @@ Create a `config.yaml` file:
 ```yaml
 # config.yaml
 title: MyBookmarks
+description: My apps are awesome
 auth: basic_auth
 apps:
   - id: app_1
@@ -79,6 +80,19 @@ users:
     password: "{your_hashed_password}"
     roles:
       - admin
+```
+
+#### Title and description
+
+The `title` and `description` fields are used by the page template.
+
+They define the page title and description metadata, which can be displayed by the browser or link previews.
+
+Example:
+
+```yaml
+title: MyBookmarks
+description: My personal homelab dashboard
 ```
 
 #### auth
@@ -153,7 +167,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./config.yaml:/config.yaml
+      - ./config.yaml:/config.yaml:ro
 ```
 
 Start the service:
@@ -178,7 +192,7 @@ services:
     networks:
       - traefik
     volumes:
-      - ./config.yaml:/config.yaml
+      - ./config.yaml:/config.yaml:ro
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik"

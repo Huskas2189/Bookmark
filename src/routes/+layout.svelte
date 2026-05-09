@@ -6,10 +6,19 @@
     let { data, children }: LayoutProps = $props();
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+    <title>{data.title} - {data.projectName}</title>
+    <link rel="icon" href={favicon} />
+    <meta name="description" content={data.description} />
+</svelte:head>
 
 <header>
-    <h1>{data.title}</h1>
+    <div class="title-container">
+        <h1>{data.title}</h1>
+        {#if data.description}
+            <span class="description">{data.description}</span>
+        {/if}
+    </div>
 </header>
 <main>
     {@render children()}
@@ -22,13 +31,19 @@
     header {
         @apply fixed top-0 right-0 left-0;
         @apply flex items-center justify-center;
-        /*@apply mx-auto my-auto;*/
         height: var(--header-height);
 
         @apply z-50;
         @apply shadow-lg;
         @apply backdrop-blur-lg;
         @apply bg-white/20;
+
+        .title-container {
+            @apply flex items-center;
+            .description {
+                @apply self-end;
+            }
+        }
     }
 
     main {
