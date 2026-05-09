@@ -23,20 +23,16 @@
 <main>
     {@render children()}
 </main>
-<footer></footer>
+<footer>
+    Version: {data.projectVersion}
+</footer>
 
 <style>
     @reference '../style/_style.css';
 
     header {
-        @apply fixed top-0 right-0 left-0;
-        @apply flex items-center justify-center;
-        height: var(--header-height);
-
-        @apply z-50;
+        @apply layout-header;
         @apply shadow-lg;
-        @apply backdrop-blur-lg;
-        @apply bg-white/20;
 
         .title-container {
             @apply flex items-center;
@@ -48,7 +44,11 @@
 
     main {
         @apply flex items-center;
+        min-height: calc(100vh - calc( 2 * var(--header-height)));
+    }
 
-        min-height: calc(100vh - var(--header-height));
+    footer {
+        @apply layout-footer;
+        @apply inset-shadow-sm;
     }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    const iconUrl = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/';
+    const iconUrl = 'https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/';
     const {
         icon,
         alt
@@ -9,7 +9,7 @@
     } = $props();
 
     function getUrl(): string {
-        return iconUrl + icon + '.svg';
+        return iconUrl + icon + '.png';
     }
 </script>
 
