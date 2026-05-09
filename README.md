@@ -10,6 +10,8 @@ A simple self-hosted dashboard for homelab bookmarks.
 
 Bookmark displays only the apps that the current user is allowed to access, based on their assigned roles.
 
+![Bookmark dashboard screenshot](./docs/screenshot.png)
+
 ## Features
 
 - Simple bookmark dashboard
