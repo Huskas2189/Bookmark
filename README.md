@@ -267,7 +267,6 @@ The roadmap is managed in the [`Roadmap` project](https://codeberg.org/huskas-21
 
 The current development priorities are:
 
-- Forward Auth support
 - OpenID Connect authentication
 - Healthcheck endpoint
 - Built-in Traefik labels support

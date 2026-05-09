@@ -16,6 +16,7 @@
 
     .bookmark-container {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
+        @apply py-6;
         @apply place-content-center;
         @apply gap-4;
         @apply mx-auto;

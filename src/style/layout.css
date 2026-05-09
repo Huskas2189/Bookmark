@@ -1,3 +1,24 @@
 body {
     margin-top: var(--header-height);
+    margin-bottom: var(--header-height);
+}
+
+@utility layout-bar {
+    @apply fixed right-0 left-0;
+    @apply flex items-center justify-center;
+    @apply backdrop-blur-lg;
+    @apply z-50;
+    @apply bg-white/20;
+    height: var(--header-height);
+}
+
+
+@utility layout-header {
+    @apply layout-bar;
+    @apply top-0;
+}
+
+@utility layout-footer {
+    @apply layout-bar;
+    @apply bottom-0;
 }
