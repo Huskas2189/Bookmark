@@ -27,7 +27,7 @@ export class BasicAuth implements AuthProvider {
             return false;
         }
 
-        if (await bcrypt.compare(password, user.password)) {
+        if (await bcrypt.compare(password, user.password ?? '')) {
             this._user = user;
             return true;
         }
