@@ -10,7 +10,6 @@ RUN npm version ${VERSION} --no-git-tag-version --allow-same-version
 
 FROM upstream AS build
 
-
 COPY . .
 COPY --from=upstream /app/package.json /app/package-lock.json ./
 
