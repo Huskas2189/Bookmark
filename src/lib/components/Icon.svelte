@@ -19,6 +19,6 @@
     @reference '../style/_style.css';
 
     img {
-        @apply h-12 w-auto;
+        @apply h-8 w-auto;
     }
 </style>
