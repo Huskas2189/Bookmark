@@ -21,20 +21,6 @@ Bookmark displays only the apps that the current user is allowed to access, base
 - Docker and Docker Compose support
 - Optional custom icons
 
-## Tech stack
-
-Bookmark is built with a lightweight and self-hosting-friendly stack:
-
-| Technology     |    Version |
-|----------------|-----------:|
-| **Node.js**    |    `24.14` |
-| **Svelte**     |     `5.55` |
-| **SvelteKit**  |     `2.57` |
-| **Vite**       |      `8.0` |
-| **TypeScript** |      `6.0` |
-
-This stack keeps Bookmark simple to deploy, easy to maintain, and approachable for contributors.
-
 ## Why Bookmark?
 
 Bookmark was created for homelab users who want a simple entry point to all their other applications.
@@ -56,6 +42,21 @@ Bookmark is designed to be:
 
 The goal is not to be the most feature-rich homelab dashboard.
 The goal is to be the dashboard that does one thing well: showing the right bookmarks to the right users.
+
+
+## Tech stack
+
+Bookmark is built with a lightweight and self-hosting-friendly stack:
+
+| Technology     |    Version |
+|----------------|-----------:|
+| **Node.js**    |    `24.14` |
+| **Svelte**     |     `5.55` |
+| **SvelteKit**  |     `2.57` |
+| **Vite**       |      `8.0` |
+| **TypeScript** |      `6.0` |
+
+This stack keeps Bookmark simple to deploy, easy to maintain, and approachable for contributors.
 
 ## Usage
 
