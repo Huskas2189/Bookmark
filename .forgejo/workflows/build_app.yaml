@@ -93,7 +93,10 @@ jobs:
 
       - name: Build Image
         run: |
-          docker build --no-cache -t bookmark_tmp --build-arg VERSION=${{ needs.gitversion.outputs.version }} .
+          docker build --no-cache -t bookmark_tmp \
+            --build-arg VERSION=${{ needs.gitversion.outputs.version }} \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            .
           docker image tag bookmark_tmp ${REPO_URL}:latest
           docker image tag bookmark_tmp ${REPO_URL}:${{ needs.gitversion.outputs.version }}
 
