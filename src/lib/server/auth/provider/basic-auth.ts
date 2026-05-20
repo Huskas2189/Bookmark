@@ -1,5 +1,5 @@
 import type { AuthProvider } from '$lib/server/auth/auth-provider.interface.ts';
-import { globalConfig } from '$lib/server/global-config.ts';
+import { getGlobalConfig } from '$lib/server/global-config.ts';
 import type { User } from '$lib/models/user.ts';
 import bcrypt from 'bcryptjs';
 
@@ -45,6 +45,6 @@ export class BasicAuth implements AuthProvider {
     }
 
     private _getUser(username: string): User | null {
-        return globalConfig.users.find((u) => u.username === username) ?? null;
+        return getGlobalConfig().users.find((u) => u.username === username) ?? null;
     }
 }

@@ -3,8 +3,7 @@ import type {App} from "$lib/models/app.ts";
 import {getDockerApps} from "$lib/server/docker-labels/docker-apps.ts";
 
 
-export const labels: AppProvider = {
-  async getApps(): Promise<App[]> {
+export async function getApps(): Promise<App[]> {
     return await getDockerApps();
-  }
+
 }
