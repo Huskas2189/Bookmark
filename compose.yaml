@@ -9,8 +9,23 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     tty: true
     environment:
       CONFIG_FILE: /app/config/config.yaml
     ports:
       - '5173:5173'
+
+  httpd:
+    container_name: httpd
+    image: httpd
+    ports:
+      - "8000:80"
+    profiles: [ "docker-labels" ]
+    labels:
+      - "bookmark.enabled=true"
+      - "bookmark.app.id=httpd"
+      - "bookmark.app.icon=apache"
+      - "bookmark.app.name=Httpd"
+      - "bookmark.app.url=http://localhost:8000"
+      - "bookmark.app.roles=bookmark_admin"

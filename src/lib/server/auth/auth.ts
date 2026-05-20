@@ -1,18 +1,18 @@
-import type { AuthProvider } from '$lib/server/auth/authProvider.interface.ts';
+import type { AuthProvider } from '$lib/server/auth/auth-provider.interface.ts';
 import { BasicAuth } from '$lib/server/auth/provider/basic-auth.ts';
-import { getAuthType } from '$lib/server/config.ts';
+import { globalConfig } from '$lib/server/global-config.ts';
 import {ForwardAuth} from "$lib/server/auth/provider/forward-auth.ts";
 
 let authProvider: AuthProvider;
 
-export type AuthType = 'basic_auth';
+export type AuthType = 'basic_auth' | 'forward_auth';
 
 export function getAuthProvider(): AuthProvider {
     if (authProvider) {
         return authProvider;
     }
 
-    const authType = getAuthType();
+    const authType = globalConfig.auth;
     switch (authType) {
         case 'basic_auth':
             authProvider = new BasicAuth();
@@ -21,7 +21,7 @@ export function getAuthProvider(): AuthProvider {
             authProvider = new ForwardAuth();
             break;
         default: {
-            throw new Error(`Unsupported provider: ${authType}`);
+            throw new Error(`Unsupported auth provider: ${authType}`);
         }
     }
 

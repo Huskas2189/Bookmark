@@ -1,7 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
 import { getAuthProvider } from '$lib/server/auth/auth.ts';
-import { getApps } from '$lib/server/config.ts';
-import type { User } from '$lib/models/config.ts';
 import { sequence } from '@sveltejs/kit/hooks';
 
 /**
@@ -19,15 +17,5 @@ const connectUser: Handle = async ({ event, resolve }) => {
     return resolve(event);
 };
 
-const configUserApps: Handle = async ({ event, resolve }) => {
-    const authProvider = getAuthProvider();
-    const user = authProvider.getConnectedUser() as User;
 
-    event.locals.apps = getApps().filter((app) => {
-        const groupSet = new Set(user.roles);
-        return app.roles.some((role) => groupSet.has(role));
-    });
-    return resolve(event);
-};
-
-export const handle = sequence(connectUser, configUserApps);
+export const handle = sequence(connectUser);

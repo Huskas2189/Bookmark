@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { App } from '$lib/models/config.ts';
+    import type { App } from '$lib/models/app.ts';
     import Icon from '$lib/components/Icon.svelte';
 
     const uid = $props.id();
