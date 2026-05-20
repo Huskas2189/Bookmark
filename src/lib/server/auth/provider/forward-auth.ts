@@ -1,5 +1,5 @@
 import type {AuthProvider} from "$lib/server/auth/authProvider.interface.ts";
-import type {User} from "$lib/models/config.ts";
+import type {User} from "$lib/models/user.ts";
 
 
 export class ForwardAuth implements AuthProvider {

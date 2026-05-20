@@ -60,6 +60,74 @@ This stack keeps Bookmark simple to deploy, easy to maintain, and approachable f
 
 ## Usage
 
+### Docker compose
+
+#### Basic example
+```yaml
+# compose.yaml
+---
+name: bookmark
+
+services:
+  bookmark:
+    container_name: bookmark
+    image: codeberg.org/huskas-2189/bookmark:latest
+    environment:
+      BOOKMARK_ORIGIN: "http://localhost:3000"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config.yaml:/config.yaml:ro
+```
+
+Start the service:
+```bash
+docker compose up -d
+```
+
+Then open http://localhost:3000
+
+#### Traefik example
+```yaml
+# compose.yaml
+---
+name: bookmark
+
+services:
+  bookmark:
+    container_name: bookmark
+    image: codeberg.org/huskas-2189/bookmark:latest
+    environment:
+      BOOKMARK_ORIGIN: "https://bookmark.domain.org"
+    networks:
+      - traefik
+    volumes:
+      - ./config.yaml:/config.yaml:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
+      - "traefik.http.routers.bookmark.service=bookmark-service"
+      - "traefik.http.routers.bookmark.rule=Host(`bookmark.domain.org`)"
+      - "traefik.http.services.bookmark-service.loadbalancer.server.port=3000"
+      - "traefik.http.services.bookmark-service.loadbalancer.server.scheme=http"
+
+networks:
+  traefik:
+    external: true
+```
+
+Make sure **BOOKMARK_ORIGIN** matches the public URL used to access the app.
+
+#### Environment variables
+
+List of available environment variables:
+
+| Env             | Default Value         |
+|-----------------|-----------------------|
+| BOOKMARK_ORIGIN | http://localhost:3000 |
+| CONFIG_FILE     | /config.yaml          |
+
+
 ### Configuration file
 
 Create a `config.yaml` file:
@@ -128,6 +196,8 @@ apps:
       - media
 ```
 
+Apps can also be configured with docker labels. [See labels](#docker-labels)
+
 #### users
 
 The `users` section is required when `auth` is set to `basic_auth`.
@@ -159,73 +229,36 @@ users:
       - media
 ```
 
-### Docker compose
+### Docker labels
 
-#### Basic example
+Apps can be defined with docker labels.
+
+| Label              | Required | Description                                                 |
+|--------------------|----------|-------------------------------------------------------------|
+| bookmark.enabled   | true     | Enable labels for the given container                       |
+| bookmark.app.id    | true     | Unique app identifier. Also used as the default icon ID.    |
+| bookmark.app.name  | true     | Display name of the app.                                    |
+| bookmark.app.url   | true     | URL where the user will be redirected.                      |
+| bookmark.app.roles | true     | List of roles allowed to see this app, separate by a comma. |
+| bookmark.app.icon  | false    | Custom icon ID. See [Icons](#icons).                        |
+
+
+example:
 ```yaml
-# compose.yaml
----
-name: bookmark
-
 services:
-  bookmark:
-    container_name: bookmark
-    image: codeberg.org/huskas-2189/bookmark:latest
-    environment:
-      BOOKMARK_ORIGIN: "http://localhost:3000"
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./config.yaml:/config.yaml:ro
+  httpd:
+      container_name: httpd
+      image: httpd
+      ports:
+        - "8000:80"
+      labels:
+        - "bookmark.enabled=true"
+        - "bookmark.app.id=httpd"
+        - "bookmark.app.icon=apache"
+        - "bookmark.app.name=My web App"
+        - "bookmark.app.url=http://localhost:8000"
+        - "bookmark.app.roles=bookmark_admin"
 ```
-
-Start the service:
-```bash
-docker compose up -d
-```
-
-Then open http://localhost:3000
-
-#### Traefik example
-```yaml
-# compose.yaml
----
-name: bookmark
-
-services:
-  bookmark:
-    container_name: bookmark
-    image: codeberg.org/huskas-2189/bookmark:latest
-    environment:
-      BOOKMARK_ORIGIN: "https://bookmark.domain.org"
-    networks:
-      - traefik
-    volumes:
-      - ./config.yaml:/config.yaml:ro
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.bookmark.service=bookmark-service"
-      - "traefik.http.routers.bookmark.rule=Host(`bookmark.domain.org`)"
-      - "traefik.http.services.bookmark-service.loadbalancer.server.port=3000"
-      - "traefik.http.services.bookmark-service.loadbalancer.server.scheme=http"
-
-networks:
-  traefik:
-    external: true
-```
-
-Make sure **BOOKMARK_ORIGIN** matches the public URL used to access the app.
-
-#### Environment variables
-
-List of available environment variables:
-
-| Env             | Default Value         |
-|-----------------|-----------------------|
-| BOOKMARK_ORIGIN | http://localhost:3000 |
-| CONFIG_FILE     | /config.yaml          |
-
 
 ### Hash Passwords
 
