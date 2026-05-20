@@ -1,9 +1,11 @@
 import type {BookmarkConfig} from "$lib/models/bookmark-config.ts";
-import {fileConfig} from "$lib/server/config/file-config.ts";
+import {getFileConfig} from "$lib/server/config/file-config.ts";
 
-export const globalConfig: BookmarkConfig = {
-  title: fileConfig.title,
-  description: fileConfig.description,
-  auth: fileConfig.auth,
-  users: fileConfig.users
+export function getGlobalConfig(): BookmarkConfig {
+  return {
+    title: getFileConfig().title,
+    description: getFileConfig().description,
+    auth: getFileConfig().auth,
+    users: getFileConfig().users
+  };
 }

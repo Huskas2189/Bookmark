@@ -13,16 +13,20 @@ export type BookmarkConfigFile = BookmarkConfig & {
  * Read the config file
  */
 
-let globalConfig: BookmarkConfigFile = loadConfig();
+let globalConfig: BookmarkConfigFile|null = null;
 
 function loadConfig(): BookmarkConfigFile {
+  if (!env.CONFIG_FILE) {
+    throw new Error('CONFIG_FILE env is undefined');
+  }
+
   try {
     const file = fs.readFileSync(env.CONFIG_FILE, 'utf8');
 
     return yaml.load(file, {});
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error(`Le fichier ${env.CONFIG_FILE} est introuvable.`);
+      console.error(`File ${env.CONFIG_FILE} doesn't exist.`);
     } else {
       throw error;
     }
@@ -30,11 +34,27 @@ function loadConfig(): BookmarkConfigFile {
 }
 
 
-export const fileConfig: BookmarkConfig = {
-  title: globalConfig.title,
-  description: globalConfig.description ?? "",
-  auth: globalConfig.auth ?? "basic_auth",
-  users: globalConfig.users ?? [],
+function getGlobalConfig(): BookmarkConfigFile {
+  if (!globalConfig) {
+    globalConfig = loadConfig();
+  }
+
+  return globalConfig;
 }
 
-export const fileApps: App[] = globalConfig.apps ?? [];
+export function getFileConfig(): BookmarkConfig {
+  const globalConfig = getGlobalConfig();
+
+  return {
+    title: globalConfig.title,
+    description: globalConfig.description ?? "",
+    auth: globalConfig.auth ?? "basic_auth",
+    users: globalConfig.users ?? []
+  }
+}
+
+export function getFileApps(): App[] {
+  const globalConfig = getGlobalConfig();
+
+  return globalConfig.apps ?? [];
+}
