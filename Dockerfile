@@ -19,6 +19,16 @@ RUN npm run build
 
 FROM upstream AS runner
 
+ARG VERSION
+ARG BUILD_DATE
+
+LABEL org.opencontainers.image.title="Bookmark" \
+      org.opencontainers.image.description="A simple self-hosted dashboard for homelab bookmarks." \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.source="https://codeberg.org/huskas-2189/Bookmark" \
+      org.opencontainers.image.licenses="GNU General Public License v3.0"
+
 ENV NODE_ENV=production
 ENV BOOKMARK_ORIGIN=http://localhost:3000
 ENV CONFIG_FILE=/config.yaml
