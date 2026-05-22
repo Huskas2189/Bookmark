@@ -1,4 +1,4 @@
-import type { User } from '$lib/models/user.ts';
+import type { User } from '$lib/models/user';
 
 export interface AuthProvider {
     getConnectedUser(): User | null;

@@ -22,10 +22,10 @@ function loadConfig(): BookmarkConfigFile {
     try {
         const file = fs.readFileSync(env.CONFIG_FILE, 'utf8');
 
-        return yaml.load(file, {});
-    } catch (error) {
+        return yaml.load(file, {}) as BookmarkConfigFile;
+    } catch (error: any) {
         if (error.code === 'ENOENT') {
-            throw new Error(`File ${env.CONFIG_FILE} doesn't exist.`);
+            throw new Error(`File ${env.CONFIG_FILE} doesn't exist.`, { cause: error });
         } else {
             throw error;
         }

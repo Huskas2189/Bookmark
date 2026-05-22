@@ -27,7 +27,7 @@
     Version: {data.projectVersion}
 </footer>
 
-<style>
+<style lang="postcss">
     @reference '../style/_style.css';
 
     header {

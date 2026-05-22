@@ -1,7 +1,7 @@
-import type { AuthProvider } from '$lib/server/auth/auth-provider.interface.ts';
-import { BasicAuth } from '$lib/server/auth/provider/basic-auth.ts';
-import { getGlobalConfig } from '$lib/server/global-config.ts';
-import { ForwardAuth } from '$lib/server/auth/provider/forward-auth.ts';
+import type { AuthProvider } from '$lib/server/auth/auth-provider.interface';
+import { BasicAuth } from '$lib/server/auth/provider/basic-auth';
+import { getGlobalConfig } from '$lib/server/global-config';
+import { ForwardAuth } from '$lib/server/auth/provider/forward-auth';
 
 let authProvider: AuthProvider;
 

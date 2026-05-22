@@ -1,5 +1,5 @@
-import type { AuthType } from '$lib/server/auth/auth.ts';
-import type { User } from '$lib/models/user.ts';
+import type { AuthType } from '$lib/server/auth/auth';
+import type { User } from '$lib/models/user';
 
 export type BookmarkConfig = {
     title: string;

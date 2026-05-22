@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
-import { getAuthProvider } from '$lib/server/auth/auth.ts';
-import type { User } from '$lib/models/user.ts';
-import { getApps } from '$lib/server/apps/apps.ts';
+import { getAuthProvider } from '$lib/server/auth/auth';
+import type { User } from '$lib/models/user';
+import { getApps } from '$lib/server/apps/apps';
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async () => {
     const authProvider = getAuthProvider();
     const user = authProvider.getConnectedUser() as User;
 

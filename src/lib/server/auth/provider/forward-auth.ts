@@ -1,5 +1,5 @@
-import type { AuthProvider } from '$lib/server/auth/auth-provider.interface.ts';
-import type { User } from '$lib/models/user.ts';
+import type { AuthProvider } from '$lib/server/auth/auth-provider.interface';
+import type { User } from '$lib/models/user';
 
 export class ForwardAuth implements AuthProvider {
     private readonly REMOTE_GROUPS_HEADER = 'Remote-Groups';

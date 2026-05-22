@@ -1,5 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
-import { getAuthProvider } from '$lib/server/auth/auth.ts';
+import { getAuthProvider } from '$lib/server/auth/auth';
 import { sequence } from '@sveltejs/kit/hooks';
 
 /**

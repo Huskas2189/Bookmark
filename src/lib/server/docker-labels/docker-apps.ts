@@ -1,4 +1,4 @@
-import type { App } from '$lib/models/app.ts';
+import type { App } from '$lib/models/app';
 import {
     BOOKMARK_APP_ICON,
     BOOKMARK_APP_ID,
@@ -6,9 +6,9 @@ import {
     BOOKMARK_APP_ROLES,
     BOOKMARK_APP_URL,
     BOOKMARK_ENABLED
-} from '$lib/server/docker-labels/labels-keys.ts';
-import { getContainers } from '$lib/server/docker-labels/docker.ts';
-import type { DockerContainer } from '$lib/server/docker-labels/docker.ts';
+} from '$lib/server/docker-labels/labels-keys';
+import { getContainers } from '$lib/server/docker-labels/docker';
+import type { DockerContainer } from '$lib/server/docker-labels/docker';
 
 export async function getDockerApps(): Promise<App[]> {
     const apps: App[] = [];
@@ -17,7 +17,7 @@ export async function getDockerApps(): Promise<App[]> {
         await Promise.all(
             containers.map(async (container) => {
                 if (
-                    container.Labels.hasOwnProperty(BOOKMARK_ENABLED) &&
+                    Object.prototype.hasOwnProperty.call(container.Labels, BOOKMARK_ENABLED) &&
                     container.Labels[BOOKMARK_ENABLED] === 'true'
                 ) {
                     try {
@@ -32,7 +32,7 @@ export async function getDockerApps(): Promise<App[]> {
                             url: container.Labels[BOOKMARK_APP_URL],
                             icon: container.Labels[BOOKMARK_APP_ICON] ?? null
                         });
-                    } catch (e) {
+                    } catch (e: any) {
                         console.log(e.message);
                     }
                 }
@@ -40,7 +40,7 @@ export async function getDockerApps(): Promise<App[]> {
         );
 
         return apps;
-    } catch (e) {
+    } catch {
         console.log(`Docker label is disabled.`);
         return [];
     }
@@ -48,7 +48,7 @@ export async function getDockerApps(): Promise<App[]> {
 
 function checkRequiredLabels(container: DockerContainer) {
     [BOOKMARK_APP_ID, BOOKMARK_APP_NAME, BOOKMARK_APP_ROLES, BOOKMARK_APP_URL].forEach((label) => {
-        if (!container.Labels.hasOwnProperty(label)) {
+        if (!Object.prototype.hasOwnProperty.call(container.Labels, label)) {
             throw new Error(`Missing ${label} label for ${container.Names[0]}`);
         }
     });
