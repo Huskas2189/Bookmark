@@ -13,14 +13,14 @@ services:
     environment:
       CONFIG_FILE: /app/config/config.yaml
     ports:
-      - '5173:5173'
+      - "5173:5173"
 
   httpd:
     container_name: httpd
     image: httpd
     ports:
       - "8000:80"
-    profiles: [ "docker-labels" ]
+    profiles: ["docker-labels"]
     labels:
       - "bookmark.enabled=true"
       - "bookmark.app.id=httpd"

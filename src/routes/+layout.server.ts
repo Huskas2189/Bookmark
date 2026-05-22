@@ -1,7 +1,6 @@
-
 import type { LayoutServerData } from './$types';
-import {projectName, projectVersion} from "$lib/server/project.ts";
-import {getGlobalConfig} from "$lib/server/global-config.ts";
+import { projectName, projectVersion } from '$lib/server/project.ts';
+import { getGlobalConfig } from '$lib/server/global-config.ts';
 
 export const load: LayoutServerData = () => {
     return {

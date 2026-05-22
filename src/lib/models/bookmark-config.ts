@@ -1,5 +1,5 @@
 import type { AuthType } from '$lib/server/auth/auth.ts';
-import type {User} from "$lib/models/user.ts";
+import type { User } from '$lib/models/user.ts';
 
 export type BookmarkConfig = {
     title: string;
@@ -7,4 +7,3 @@ export type BookmarkConfig = {
     auth: AuthType;
     users: User[];
 };
-

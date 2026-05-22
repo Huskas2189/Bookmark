@@ -43,18 +43,17 @@ Bookmark is designed to be:
 The goal is not to be the most feature-rich homelab dashboard.
 The goal is to be the dashboard that does one thing well: showing the right bookmarks to the right users.
 
-
 ## Tech stack
 
 Bookmark is built with a lightweight and self-hosting-friendly stack:
 
-| Technology     |    Version |
-|----------------|-----------:|
-| **Node.js**    |    `24.14` |
-| **Svelte**     |     `5.55` |
-| **SvelteKit**  |     `2.57` |
-| **Vite**       |      `8.0` |
-| **TypeScript** |      `6.0` |
+| Technology     | Version |
+| -------------- | ------: |
+| **Node.js**    | `24.14` |
+| **Svelte**     |  `5.55` |
+| **SvelteKit**  |  `2.57` |
+| **Vite**       |   `8.0` |
+| **TypeScript** |   `6.0` |
 
 This stack keeps Bookmark simple to deploy, easy to maintain, and approachable for contributors.
 
@@ -63,6 +62,7 @@ This stack keeps Bookmark simple to deploy, easy to maintain, and approachable f
 ### Docker compose
 
 #### Basic example
+
 ```yaml
 # compose.yaml
 ---
@@ -73,14 +73,15 @@ services:
     container_name: bookmark
     image: codeberg.org/huskas-2189/bookmark:latest
     environment:
-      BOOKMARK_ORIGIN: "http://localhost:3000"
+      BOOKMARK_ORIGIN: 'http://localhost:3000'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./config.yaml:/config.yaml:ro
 ```
 
 Start the service:
+
 ```bash
 docker compose up -d
 ```
@@ -88,6 +89,7 @@ docker compose up -d
 Then open http://localhost:3000
 
 #### Traefik example
+
 ```yaml
 # compose.yaml
 ---
@@ -98,18 +100,18 @@ services:
     container_name: bookmark
     image: codeberg.org/huskas-2189/bookmark:latest
     environment:
-      BOOKMARK_ORIGIN: "https://bookmark.domain.org"
+      BOOKMARK_ORIGIN: 'https://bookmark.domain.org'
     networks:
       - traefik
     volumes:
       - ./config.yaml:/config.yaml:ro
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik"
-      - "traefik.http.routers.bookmark.service=bookmark-service"
-      - "traefik.http.routers.bookmark.rule=Host(`bookmark.domain.org`)"
-      - "traefik.http.services.bookmark-service.loadbalancer.server.port=3000"
-      - "traefik.http.services.bookmark-service.loadbalancer.server.scheme=http"
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik'
+      - 'traefik.http.routers.bookmark.service=bookmark-service'
+      - 'traefik.http.routers.bookmark.rule=Host(`bookmark.domain.org`)'
+      - 'traefik.http.services.bookmark-service.loadbalancer.server.port=3000'
+      - 'traefik.http.services.bookmark-service.loadbalancer.server.scheme=http'
 
 networks:
   traefik:
@@ -123,10 +125,9 @@ Make sure **BOOKMARK_ORIGIN** matches the public URL used to access the app.
 List of available environment variables:
 
 | Env             | Default Value         |
-|-----------------|-----------------------|
+| --------------- | --------------------- |
 | BOOKMARK_ORIGIN | http://localhost:3000 |
 | CONFIG_FILE     | /config.yaml          |
-
 
 ### Configuration file
 
@@ -146,7 +147,7 @@ apps:
 
 users:
   - username: your_user
-    password: "{your_hashed_password}"
+    password: '{your_hashed_password}'
     roles:
       - admin
 ```
@@ -177,7 +178,7 @@ The apps section defines the bookmarks displayed in the dashboard.
 Each app requires:
 
 | Field   | Required | Description                                              |
-|---------|---------:|----------------------------------------------------------|
+| ------- | -------: | -------------------------------------------------------- |
 | `id`    |      Yes | Unique app identifier. Also used as the default icon ID. |
 | `name`  |      Yes | Display name of the app.                                 |
 | `url`   |      Yes | URL where the user will be redirected.                   |
@@ -214,16 +215,17 @@ With `basic_auth`, the `users` section defines who can access Bookmark.
 Each user requires:
 
 | Field      | Required | Description                                             |
-|------------|---------:|---------------------------------------------------------|
+| ---------- | -------: | ------------------------------------------------------- |
 | `username` |      Yes | Username used to sign in.                               |
 | `password` |      Yes | Hashed password. See [Hash passwords](#hash-passwords). |
 | `roles`    |      Yes | List of roles assigned to the user.                     |
 
 Example:
+
 ```yaml
 users:
   - username: alice
-    password: "$2b$..."
+    password: '$2b$...'
     roles:
       - admin
       - media
@@ -234,7 +236,7 @@ users:
 Apps can be defined with docker labels.
 
 | Label              | Required | Description                                                 |
-|--------------------|----------|-------------------------------------------------------------|
+| ------------------ | -------- | ----------------------------------------------------------- |
 | bookmark.enabled   | true     | Enable labels for the given container                       |
 | bookmark.app.id    | true     | Unique app identifier. Also used as the default icon ID.    |
 | bookmark.app.name  | true     | Display name of the app.                                    |
@@ -242,22 +244,22 @@ Apps can be defined with docker labels.
 | bookmark.app.roles | true     | List of roles allowed to see this app, separate by a comma. |
 | bookmark.app.icon  | false    | Custom icon ID. See [Icons](#icons).                        |
 
-
 example:
+
 ```yaml
 services:
   httpd:
-      container_name: httpd
-      image: httpd
-      ports:
-        - "8000:80"
-      labels:
-        - "bookmark.enabled=true"
-        - "bookmark.app.id=httpd"
-        - "bookmark.app.icon=apache"
-        - "bookmark.app.name=My web App"
-        - "bookmark.app.url=http://localhost:8000"
-        - "bookmark.app.roles=bookmark_admin"
+    container_name: httpd
+    image: httpd
+    ports:
+      - '8000:80'
+    labels:
+      - 'bookmark.enabled=true'
+      - 'bookmark.app.id=httpd'
+      - 'bookmark.app.icon=apache'
+      - 'bookmark.app.name=My web App'
+      - 'bookmark.app.url=http://localhost:8000'
+      - 'bookmark.app.roles=bookmark_admin'
 ```
 
 ### Hash Passwords
@@ -272,7 +274,7 @@ Then copy the generated hash into your configuration file:
 ```yaml
 users:
   - username: your_user
-    password: "{generated_hash}"
+    password: '{generated_hash}'
     roles:
       - admin
 ```
@@ -285,6 +287,7 @@ Icons are provided by [Homarr-labs](https://github.com/homarr-labs/homarr).
 By default, Bookmark tries to use the app `id` as the icon ID.
 
 If the icon does not exist, or if you want to use a different icon, add the icon field:
+
 ```yaml
 apps:
   - id: my-media-server

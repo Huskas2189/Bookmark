@@ -12,7 +12,6 @@ body {
     height: var(--header-height);
 }
 
-
 @utility layout-header {
     @apply layout-bar;
     @apply top-0;

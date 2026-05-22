@@ -1,6 +1,5 @@
-
-const BOOKMARK_PREFIX = "bookmark";
-const BOOKMARK_APP_PREFIX = `${BOOKMARK_PREFIX}.app`
+const BOOKMARK_PREFIX = 'bookmark';
+const BOOKMARK_APP_PREFIX = `${BOOKMARK_PREFIX}.app`;
 
 export const BOOKMARK_ENABLED = `${BOOKMARK_PREFIX}.enabled`;
 export const BOOKMARK_APP_ID = `${BOOKMARK_APP_PREFIX}.id`;
