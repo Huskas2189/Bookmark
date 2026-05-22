@@ -5,7 +5,8 @@ import {
   BOOKMARK_APP_NAME, BOOKMARK_APP_ROLES, BOOKMARK_APP_URL,
   BOOKMARK_ENABLED
 } from "$lib/server/docker-labels/labels-keys.ts";
-import {DockerContainer, getContainers} from "$lib/server/docker-labels/docker.ts";
+import {getContainers} from "$lib/server/docker-labels/docker.ts";
+import type {DockerContainer} from "$lib/server/docker-labels/docker.ts";
 
 export async function getDockerApps(): Promise<App[]> {
 
