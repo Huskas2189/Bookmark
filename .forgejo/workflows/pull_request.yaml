@@ -1,0 +1,77 @@
+name: Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  lint:
+    runs-on: docker
+    container: node@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f
+    steps:
+      - name: Install Git
+        run: |
+          apk add \
+            git \
+            jq \
+            curl
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install app
+        run: npm ci
+
+      ## PRETTIER
+      - name: Run Prettier
+        id: prettier_check
+        continue-on-error: true
+        run: npm run format:check
+
+      - name: Fix formatting
+        if: steps.prettier_check.outcome == 'failure'
+        run: |
+          npm run format
+          git diff > prettier.patch
+          git reset HEAD --hard
+
+      - name: Upload Prettier patch
+        if: steps.prettier_check.outcome == 'failure'
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: prettier-patch
+          path: prettier.patch
+
+      ## ES-LINT
+      - name: EsLint
+        id: eslint_check
+        continue-on-error: true
+        run: npm run lint
+
+      - name: Fix ESLint
+        if: steps.eslint_check.outcome == 'failure'
+        continue-on-error: true
+        run: npm run lint:fix:dry-run
+
+      - name: Upload ESLint errors
+        if: steps.eslint_check.outcome == 'failure'
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        with:
+          name: lint-fix
+          path: lint-fix.json
+
+      ## SVELTE CHECK
+      - name: Run Svelte check
+        id: svelte_check
+        continue-on-error: true
+        run: npm run check
+
+      # Force failed
+      - name: Fail if checks failed
+        if: |
+          steps.prettier_check.outcome == 'failure' ||
+          steps.eslint_check.outcome == 'failure' ||
+          steps.svelte_check.outcome == 'failure'
+        run: |
+          echo "Quality checks failed"
+          exit 1

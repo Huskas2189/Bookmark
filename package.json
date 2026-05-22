@@ -10,8 +10,11 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"lint": "eslint .",
+		"lint:fix": "eslint --fix .",
+		"lint:fix:dry-run": "eslint --fix-dry-run --format json -o lint-fix.json . || true",
 		"hash-password": "node ./bin/hash-password.js"
 	},
 	"devDependencies": {
