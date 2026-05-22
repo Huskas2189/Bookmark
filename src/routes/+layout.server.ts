@@ -1,4 +1,4 @@
-import type {LayoutServerLoad} from './$types';
+import type { LayoutServerLoad } from './$types';
 import { projectName, projectVersion } from '$lib/server/project';
 import { getGlobalConfig } from '$lib/server/global-config';
 

@@ -32,8 +32,10 @@ export async function getDockerApps(): Promise<App[]> {
                             url: container.Labels[BOOKMARK_APP_URL],
                             icon: container.Labels[BOOKMARK_APP_ICON] ?? null
                         });
-                    } catch (e: any) {
-                        console.log(e.message);
+                    } catch (e: unknown) {
+                        if (e instanceof Error) {
+                            console.log(e.message);
+                        }
                     }
                 }
             })

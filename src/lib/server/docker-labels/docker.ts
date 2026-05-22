@@ -1,5 +1,5 @@
 import http from 'node:http';
-import type {RequestOptions} from 'node:http';
+import type { RequestOptions } from 'node:http';
 
 export type DockerContainer = {
     Id: string;
