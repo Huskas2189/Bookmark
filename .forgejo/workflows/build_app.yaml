@@ -10,8 +10,6 @@ jobs:
     container: gittools/gitversion:6.7.0-alpine.3.23-10.0
     outputs:
       version: ${{ steps.version.outputs.version }}
-    env:
-      IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Checkout
         run: |
@@ -52,7 +50,11 @@ jobs:
     env:
       CODEBERG_URL: "codeberg.org"
       REPO_URL: "codeberg.org/huskas-2189/bookmark"
+      IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
     steps:
+      - name: Is main branch ?
+        run: |
+          [ "$IS_MAIN" = "true" ] && echo "is main branch" || echo "is not main branch"
       - name: Install Deps
         run: |
           apk add --no-cache \
