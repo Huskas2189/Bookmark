@@ -1,6 +1,6 @@
 import http, {RequestOptions} from 'node:http';
 
-export interface DockerContainer {
+export type DockerContainer = {
   Id: string;
   Names: string[];
   Image: string;
