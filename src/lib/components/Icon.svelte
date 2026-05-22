@@ -15,7 +15,7 @@
 
 <img src={getUrl()} {alt} />
 
-<style>
+<style lang="postcss">
     @reference '../style/_style.css';
 
     img {

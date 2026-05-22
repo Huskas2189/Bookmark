@@ -6,12 +6,12 @@
 </script>
 
 <div class="bookmark-container">
-    {#each data.apps as app}
+    {#each data.apps as app (app.id)}
         <App {app}></App>
     {/each}
 </div>
 
-<style>
+<style lang="postcss">
     @reference '../style/_style.css';
 
     .bookmark-container {

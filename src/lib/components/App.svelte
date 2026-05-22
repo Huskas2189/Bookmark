@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { App } from '$lib/models/app.ts';
+    import type { App } from '$lib/models/app';
     import Icon from '$lib/components/Icon.svelte';
 
     const uid = $props.id();
@@ -13,13 +13,13 @@
 <article id="{app.id}-{uid}" class="bookmark">
     <Icon icon={app.icon ?? app.id} alt={app.name}></Icon>
     <h2>
-        <a href={app.url} aria-label="Open {app.name}">
+        <a href={app.url} aria-label="Open {app.name}" rel="external">
             {app.name}
         </a>
     </h2>
 </article>
 
-<style>
+<style lang="postcss">
     @reference '../style/_style.css';
 
     article {

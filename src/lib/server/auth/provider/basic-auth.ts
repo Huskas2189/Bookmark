@@ -1,6 +1,6 @@
-import type { AuthProvider } from '$lib/server/auth/auth-provider.interface.ts';
-import { getGlobalConfig } from '$lib/server/global-config.ts';
-import type { User } from '$lib/models/user.ts';
+import type { AuthProvider } from '$lib/server/auth/auth-provider.interface';
+import { getGlobalConfig } from '$lib/server/global-config';
+import type { User } from '$lib/models/user';
 import bcrypt from 'bcryptjs';
 
 export class BasicAuth implements AuthProvider {
