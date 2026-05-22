@@ -9,8 +9,8 @@ const config = {
     },
     kit: {
         adapter: adapter({
-			envPrefix: 'BOOKMARK_'
-		})
+            envPrefix: 'BOOKMARK_'
+        })
     }
 };
 

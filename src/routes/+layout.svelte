@@ -44,7 +44,7 @@
 
     main {
         @apply flex items-center;
-        min-height: calc(100vh - calc( 2 * var(--header-height)));
+        min-height: calc(100vh - calc(2 * var(--header-height)));
     }
 
     footer {
