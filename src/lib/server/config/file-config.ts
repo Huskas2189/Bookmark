@@ -1,8 +1,8 @@
 import { env } from '$env/dynamic/private';
 import fs from 'node:fs';
 import yaml from 'js-yaml';
-import type {BookmarkConfig} from "$lib/models/bookmark-config.ts";
-import type {App} from "$lib/models/app.ts";
+import type {BookmarkConfig} from "$lib/models/bookmark-config";
+import type {App} from "$lib/models/app";
 
 
 export type BookmarkConfigFile = BookmarkConfig & {
@@ -26,7 +26,7 @@ function loadConfig(): BookmarkConfigFile {
     return yaml.load(file, {});
   } catch (error) {
     if (error.code === 'ENOENT') {
-      console.error(`File ${env.CONFIG_FILE} doesn't exist.`);
+      throw new Error(`File ${env.CONFIG_FILE} doesn't exist.`);
     } else {
       throw error;
     }
