@@ -18,7 +18,7 @@
 		"hash-password": "node ./bin/hash-password.js"
 	},
 	"devDependencies": {
-		"@eslint/compat": "2.0.5",
+		"@eslint/compat": "2.1.0",
 		"@eslint/js": "10.0.1",
 		"@sveltejs/adapter-node": "5.5.4",
 		"@sveltejs/kit": "2.59.1",
