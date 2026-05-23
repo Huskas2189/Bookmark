@@ -9,7 +9,7 @@ jobs:
     runs-on: docker
     container: node@sha256:d1b3b4da11eefd5941e7f0b9cf17783fc99d9c6fc34884a665f40a06dbdfc94f
     steps:
-      - name: Install Git
+      - name: Install Deps
         run: |
           apk add \
             git \
@@ -17,7 +17,7 @@ jobs:
             curl
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install app
         run: npm ci
