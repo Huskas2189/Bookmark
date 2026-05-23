@@ -7,6 +7,9 @@ on:
       - "develop"
       - "release/*"
 
+env:
+  IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
+
 jobs:
   gitversion:
     name: Gitversion
@@ -16,8 +19,6 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       majorMinorPatch: ${{ steps.version.outputs.majorMinorPatch }}
       preReleaseLabel: ${{ steps.version.outputs.preReleaseLabel }}
-    env:
-      IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
     steps:
       - name: Install deps
         run: |
@@ -95,10 +96,10 @@ jobs:
 
           git checkout --detach "$FORGEJO_SHA"
 
-#      - name: Tag
-#        run: |
-#          git tag ${{ needs.gitversion.outputs.version }}
-#          git push --tags
+      #      - name: Tag
+      #        run: |
+      #          git tag ${{ needs.gitversion.outputs.version }}
+      #          git push --tags
 
       - name: Login registry
         run: |
@@ -141,6 +142,9 @@ jobs:
     needs:
       - gitversion
       - build-image
+    env:
+      GIT_CLIFF_VERSION: "2.13.1"
+      CHANGELOG_FILE: 'CHANGELOG.md'
     steps:
       - name: Install Deps
         run: |
@@ -149,33 +153,56 @@ jobs:
             jq \
             curl
 
+      - name: Setup Version
+        run: |
+          if [ "$IS_MAIN" = "true" ]; then
+            VERSION="${{ needs.gitversion.outputs.version }}"
+          else
+            VERSION="${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}"
+          fi
+
+          echo $VERSION
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
-      - name: Debug env
-        run: env
+      - name: Install git-cliff
+        run: |
+          wget "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+          tar -xvzf git-cliff-*.tar.gz
+          mv git-cliff-${GIT_CLIFF_VERSION}/git-cliff .
+          ./git-cliff --init
 
-      - name: Create pre-release
+      - name: Generate pre-release changelog
         if: env.IS_MAIN != 'true'
-        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
-        with:
-          tag: "${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}"
-          title: "${{ needs.gitversion.outputs.majorMinorPatch }} - ${{ needs.gitversion.outputs.preReleaseLabel }}"
-          token: "${{ secrets.REGISTRY_TOKEN }}"
-          override: true
-          direction: upload
-          prerelease: true
-          release-notes-assistant: true
-          verbose: true
-          skip-assets: true
+        run: |
+          ./git-cliff \
+            --tag "${VERSION}" \
+            --topo-order \
+            --ignore-tags='^.*$' \
+            -o ${CHANGELOG_FILE} \
+            origin/main..HEAD
 
-      - name: Create release
+      - name: Generate release changelog
         if: env.IS_MAIN == 'true'
+        run: |
+          ./git-cliff
+            --tag "${VERSION}" \
+            --topo-order \
+            --use-branch-tags \
+            --latest \
+            -o ${CHANGELOG_FILE}
+
+      - name: Create Release
         uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
         with:
-          tag: "${{ needs.gitversion.outputs.version }}"
+          tag: "${{ env.VERSION }}"
           token: "${{ secrets.REGISTRY_TOKEN }}"
-          override: false
+          override: ${{ env.IS_MAIN != 'true' }}
           direction: upload
-          release-notes-assistant: true
+          prerelease: ${{ env.IS_MAIN != 'true' }}
           skip-assets: true
+          release-notes-file: "${{ env.CHANGELOG_FILE }}"
