@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload Prettier patch
         if: steps.prettier_check.outcome == 'failure'
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v5
         with:
           name: prettier-patch
           path: prettier.patch
@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload ESLint errors
         if: steps.eslint_check.outcome == 'failure'
-        uses: https://data.forgejo.org/forgejo/upload-artifact@v4
+        uses: https://data.forgejo.org/forgejo/upload-artifact@v5
         with:
           name: lint-fix
           path: lint-fix.json
