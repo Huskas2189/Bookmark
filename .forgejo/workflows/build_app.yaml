@@ -144,7 +144,7 @@ jobs:
       - build-image
     env:
       GIT_CLIFF_VERSION: "2.13.1"
-      CHANGELOG_FILE: 'CHANGELOG.md'
+      CHANGELOG_FILE: "CHANGELOG.md"
     steps:
       - name: Install Deps
         run: |
@@ -200,7 +200,7 @@ jobs:
         uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
         with:
           tag: "${{ env.VERSION }}"
-          token: "${{ secrets.REGISTRY_TOKEN }}"
+          token: "${{ secrets.BOOKMARK_BOT_TOKEN }}"
           override: ${{ env.IS_MAIN != 'true' }}
           direction: upload
           prerelease: ${{ env.IS_MAIN != 'true' }}

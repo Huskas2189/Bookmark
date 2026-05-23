@@ -1,0 +1,30 @@
+name: Renovate
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  renovate:
+    runs-on: docker
+    container: renovate/renovate:latest
+    steps:
+      - name: Run Renovate
+        env:
+          RENOVATE_TOKEN: ${{ secrets.BOOKMARK_BOT_TOKEN }}
+          RENOVATE_PLATFORM: forgejo
+          RENOVATE_ENDPOINT: ${{ forgejo.api_url }}
+          RENOVATE_AUTODISCOVER: "true"
+          GITHUB_COM_TOKEN: ${{ secrets.GH_TOKEN }}
+          LOG_LEVEL: info
+          RENOVATE_GIT_AUTHOR: "Bookmark Bot <${{ secrets.RENOVATE_BOT_MAIL }}>"
+          GIT_AUTHOR_NAME: "Bookmark Bot"
+          GIT_AUTHOR_EMAIL: ${{ secrets.RENOVATE_BOT_MAIL }}
+          GIT_COMMITTER_NAME: "Bookmark Bot"
+          GIT_COMMITTER_EMAIL: ${{ secrets.RENOVATE_BOT_MAIL }}
+
+          # use direct connection for these domains for renovate go datasource instead of the go proxy
+          # allows faster lookups
+          GONOPROXY: code.forgejo.org
+        run: renovate
