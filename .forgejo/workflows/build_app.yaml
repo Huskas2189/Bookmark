@@ -2,15 +2,28 @@ name: Docker Build
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - "main"
+      - "develop"
+      - "release/*"
 
 jobs:
   gitversion:
+    name: Gitversion
     runs-on: docker
     container: gittools/gitversion:6.7.0-alpine.3.23-10.0
     outputs:
       version: ${{ steps.version.outputs.version }}
+      majorMinorPatch: ${{ steps.version.outputs.majorMinorPatch }}
+      preReleaseLabel: ${{ steps.version.outputs.preReleaseLabel }}
+    env:
+      IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
     steps:
+      - name: Install deps
+        run: |
+          apk add --no-cache \
+            jq
+
       - name: Checkout
         run: |
           set -eu
@@ -26,22 +39,20 @@ jobs:
 
           git checkout --detach "$FORGEJO_SHA"
 
-      - name: Deps
-        run: |
-          apk add --no-cache \
-            jq
-
       - name: Get Version
         id: version
         run: |
-          VERSION=$(/tools/dotnet-gitversion /output json | jq -r '.SemVer')
-          echo "version=$VERSION" >> "$FORGEJO_OUTPUT"
+          GITVERSION_OUTPUT=$(/tools/dotnet-gitversion /output json)
+          echo "version=$(echo $GITVERSION_OUTPUT | jq -r '.SemVer')" >> "$FORGEJO_OUTPUT"
+          echo "majorMinorPatch=$(echo $GITVERSION_OUTPUT | jq -r '.MajorMinorPatch')" >> "$FORGEJO_OUTPUT"
+          echo "preReleaseLabel=$(echo $GITVERSION_OUTPUT | jq -r '.PreReleaseLabel')" >> "$FORGEJO_OUTPUT"
 
       - name: Display Version
         run: |
           echo "Version: ${{ steps.version.outputs.version }}"
 
   build-image:
+    name: Build image
     runs-on: docker
     container:
       image: docker:28-cli
@@ -84,10 +95,10 @@ jobs:
 
           git checkout --detach "$FORGEJO_SHA"
 
-      - name: Tag
-        run: |
-          git tag ${{ needs.gitversion.outputs.version }}
-          git push --tags
+#      - name: Tag
+#        run: |
+#          git tag ${{ needs.gitversion.outputs.version }}
+#          git push --tags
 
       - name: Login registry
         run: |
@@ -102,7 +113,12 @@ jobs:
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             .
 
-          [ "$IS_MAIN" = "true" ] && docker image tag bookmark_tmp ${REPO_URL}:latest
+      - name: Tag images
+        run: |
+          [ "$IS_MAIN" = "true" ] \
+            && docker image tag bookmark_tmp ${REPO_URL}:latest
+          [ "$IS_MAIN" != "true" ] \
+            && docker image tag bookmark_tmp ${REPO_URL}:${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}
           docker image tag bookmark_tmp ${REPO_URL}:${{ needs.gitversion.outputs.version }}
 
       - name: Push Image to registry
@@ -113,5 +129,53 @@ jobs:
         run: |
           docker rmi ${REPO_URL}:${{ needs.gitversion.outputs.version }}
           [ "$IS_MAIN" = "true" ] && docker rmi ${REPO_URL}:latest
+          [ "$IS_MAIN" != "true" ] && docker rmi ${REPO_URL}:${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}
           docker rmi bookmark_tmp
           docker logout ${CODEBERG_URL}
+
+  publish-release:
+    name: Publish Release
+    runs-on: docker
+    container:
+      image: node:lts
+    needs:
+      - gitversion
+      - build-image
+    steps:
+      - name: Install Deps
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends \
+            git \
+            jq \
+            curl
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Debug env
+        run: env
+
+      - name: Create pre-release
+        if: env.IS_MAIN != 'true'
+        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
+        with:
+          tag: "${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}"
+          title: "${{ needs.gitversion.outputs.majorMinorPatch }} - ${{ needs.gitversion.outputs.preReleaseLabel }}"
+          token: "${{ secrets.REGISTRY_TOKEN }}"
+          override: true
+          direction: upload
+          prerelease: true
+          release-notes-assistant: true
+          verbose: true
+          skip-assets: true
+
+      - name: Create release
+        if: env.IS_MAIN == 'true'
+        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
+        with:
+          tag: "${{ needs.gitversion.outputs.version }}"
+          token: "${{ secrets.REGISTRY_TOKEN }}"
+          override: false
+          direction: upload
+          release-notes-assistant: true
+          skip-assets: true
