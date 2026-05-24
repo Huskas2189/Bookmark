@@ -2,15 +2,29 @@ name: Docker Build
 
 on:
   push:
-    branches: [main, develop]
+    branches:
+      - "main"
+      - "develop"
+      - "release/*"
+
+env:
+  IS_MAIN: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
   gitversion:
+    name: Gitversion
     runs-on: docker
     container: gittools/gitversion:6.7.0-alpine.3.23-10.0
     outputs:
       version: ${{ steps.version.outputs.version }}
+      majorMinorPatch: ${{ steps.version.outputs.majorMinorPatch }}
+      preReleaseLabel: ${{ steps.version.outputs.preReleaseLabel }}
     steps:
+      - name: Install deps
+        run: |
+          apk add --no-cache \
+            jq
+
       - name: Checkout
         run: |
           set -eu
@@ -26,25 +40,23 @@ jobs:
 
           git checkout --detach "$FORGEJO_SHA"
 
-      - name: Deps
-        run: |
-          apk add --no-cache \
-            jq
-
       - name: Get Version
         id: version
         run: |
-          VERSION=$(/tools/dotnet-gitversion /output json | jq -r '.SemVer')
-          echo "version=$VERSION" >> "$FORGEJO_OUTPUT"
+          GITVERSION_OUTPUT=$(/tools/dotnet-gitversion /output json)
+          echo "version=$(echo $GITVERSION_OUTPUT | jq -r '.SemVer')" >> "$FORGEJO_OUTPUT"
+          echo "majorMinorPatch=$(echo $GITVERSION_OUTPUT | jq -r '.MajorMinorPatch')" >> "$FORGEJO_OUTPUT"
+          echo "preReleaseLabel=$(echo $GITVERSION_OUTPUT | jq -r '.PreReleaseLabel')" >> "$FORGEJO_OUTPUT"
 
       - name: Display Version
         run: |
           echo "Version: ${{ steps.version.outputs.version }}"
 
   build-image:
+    name: Build image
     runs-on: docker
     container:
-      image: docker:28-cli
+      image: docker:29-cli
     needs:
       - gitversion
     env:
@@ -67,6 +79,17 @@ jobs:
           git config --global user.name "${FORGEJO_ACTOR}"
           git config --global user.email "bookmark-pipeline@no-reply"
 
+      - name: Setup Version
+        run: |
+          if [ "$IS_MAIN" = "true" ]; then
+            VERSION="${{ needs.gitversion.outputs.version }}"
+          else
+            VERSION="${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}"
+          fi
+
+          echo $VERSION
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
       - name: Checkout
         run: |
           set -eu
@@ -84,10 +107,10 @@ jobs:
 
           git checkout --detach "$FORGEJO_SHA"
 
-      - name: Tag
-        run: |
-          git tag ${{ needs.gitversion.outputs.version }}
-          git push --tags
+      #      - name: Tag
+      #        run: |
+      #          git tag ${{ needs.gitversion.outputs.version }}
+      #          git push --tags
 
       - name: Login registry
         run: |
@@ -98,12 +121,15 @@ jobs:
       - name: Build Image
         run: |
           docker build --no-cache -t bookmark_tmp \
-            --build-arg VERSION=${{ needs.gitversion.outputs.version }} \
+            --build-arg VERSION=${VERSION} \
             --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
             .
 
-          [ "$IS_MAIN" = "true" ] && docker image tag bookmark_tmp ${REPO_URL}:latest
-          docker image tag bookmark_tmp ${REPO_URL}:${{ needs.gitversion.outputs.version }}
+      - name: Tag images
+        run: |
+          [ "$IS_MAIN" = "true" ] \
+            && docker image tag bookmark_tmp ${REPO_URL}:latest
+          docker image tag bookmark_tmp ${REPO_URL}:${VERSION}
 
       - name: Push Image to registry
         run: |
@@ -111,7 +137,80 @@ jobs:
 
       - name: Clean up
         run: |
-          docker rmi ${REPO_URL}:${{ needs.gitversion.outputs.version }}
+          docker rmi ${REPO_URL}:${VERSION}
           [ "$IS_MAIN" = "true" ] && docker rmi ${REPO_URL}:latest
           docker rmi bookmark_tmp
           docker logout ${CODEBERG_URL}
+
+  publish-release:
+    name: Publish Release
+    runs-on: docker
+    container:
+      image: node:lts
+    needs:
+      - gitversion
+      - build-image
+    env:
+      GIT_CLIFF_VERSION: "2.13.1"
+      CHANGELOG_FILE: "CHANGELOG.md"
+    steps:
+      - name: Install Deps
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends \
+            git \
+            jq \
+            curl
+
+      - name: Setup Version
+        run: |
+          if [ "$IS_MAIN" = "true" ]; then
+            VERSION="${{ needs.gitversion.outputs.version }}"
+          else
+            VERSION="${{ needs.gitversion.outputs.majorMinorPatch }}-${{ needs.gitversion.outputs.preReleaseLabel }}"
+          fi
+
+          echo $VERSION
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Install git-cliff
+        run: |
+          wget "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+          tar -xvzf git-cliff-*.tar.gz
+          mv git-cliff-${GIT_CLIFF_VERSION}/git-cliff .
+          ./git-cliff --init
+
+      - name: Generate pre-release changelog
+        if: env.IS_MAIN != 'true'
+        run: |
+          ./git-cliff \
+            --tag "${VERSION}" \
+            --topo-order \
+            --ignore-tags='^.*$' \
+            -o ${CHANGELOG_FILE} \
+            origin/main..HEAD
+
+      - name: Generate release changelog
+        if: env.IS_MAIN == 'true'
+        run: |
+          ./git-cliff
+            --tag "${VERSION}" \
+            --topo-order \
+            --use-branch-tags \
+            --latest \
+            -o ${CHANGELOG_FILE}
+
+      - name: Create Release
+        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
+        with:
+          tag: "${{ env.VERSION }}"
+          token: "${{ secrets.BOOKMARK_BOT_TOKEN }}"
+          override: ${{ env.IS_MAIN != 'true' }}
+          direction: upload
+          prerelease: ${{ env.IS_MAIN != 'true' }}
+          skip-assets: true
+          release-notes-file: "${{ env.CHANGELOG_FILE }}"

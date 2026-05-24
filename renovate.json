@@ -1,0 +1,15 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "config:recommended",
+        ":pinDependencies",
+        ":pinDevDependencies",
+        ":separateMajorReleases",
+        ":automergeMinor"
+    ],
+    "baseBranchPatterns": ["develop"],
+    "prConcurrentLimit": 0,
+    "prHourlyLimit": 3,
+    "rebaseWhen": "behind-base-branch",
+    "semanticCommits": "enabled"
+}

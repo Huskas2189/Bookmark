@@ -16,7 +16,7 @@
 <img src={getUrl()} {alt} />
 
 <style lang="postcss">
-    @reference '../style/_style.css';
+    @reference '#style';
 
     img {
         @apply h-8 w-auto;
