@@ -56,7 +56,7 @@ jobs:
     name: Build image
     runs-on: docker
     container:
-      image: docker:28-cli
+      image: docker:29-cli
     needs:
       - gitversion
     env:
