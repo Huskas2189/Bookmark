@@ -20,7 +20,7 @@
 </article>
 
 <style lang="postcss">
-    @reference '../style/_style.css';
+    @reference '#style';
 
     article {
         @apply p-2;

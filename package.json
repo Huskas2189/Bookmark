@@ -49,5 +49,8 @@
 	"dependencies": {
 		"bcryptjs": "3.0.3",
 		"commander": "14.0.3"
+	},
+	"imports": {
+		"#style": "./src/style/_style.css"
 	}
 }
