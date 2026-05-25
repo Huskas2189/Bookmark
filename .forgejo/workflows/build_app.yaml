@@ -189,9 +189,9 @@ jobs:
         run: |
           ./git-cliff \
             --tag "${VERSION}" \
-            --topo-order \
             --ignore-tags='^.*$' \
             -o ${CHANGELOG_FILE} \
+            --config ./.forgejo/cliff-prerelease.toml \
             origin/main..HEAD
 
       - name: Generate release changelog
