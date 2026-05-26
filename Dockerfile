@@ -38,6 +38,9 @@ COPY --from=upstream /app/package.json /app/package-lock.json ./
 RUN npm ci --omit=dev
 
 COPY --from=build /app/build ./build
+COPY ./docker/healthcheck.js /healthcheck.js
+
+HEALTHCHECK CMD ["node", "/healthcheck.js"]
 
 EXPOSE 3000
 CMD ["node", "build"]
