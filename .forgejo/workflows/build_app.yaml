@@ -197,11 +197,12 @@ jobs:
       - name: Generate release changelog
         if: env.IS_MAIN == 'true'
         run: |
-          ./git-cliff
+          ./git-cliff \
             --tag "${VERSION}" \
             --topo-order \
             --use-branch-tags \
-            --latest \
+            --tag-pattern '^[0-9]*\.[0-9]*\.[0-9]$' \
+            --unreleased \
             -o ${CHANGELOG_FILE}
 
       - name: Create Release
