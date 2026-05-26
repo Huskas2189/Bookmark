@@ -10,7 +10,11 @@ import { sequence } from '@sveltejs/kit/hooks';
 const connectUser: Handle = async ({ event, resolve }) => {
     const authProvider = getAuthProvider();
 
-    if (!(await authProvider.handleRequest(event.request))) {
+    // Dont login healthcheck
+    if (
+        event.url.pathname !== '/api/healthcheck' &&
+        !(await authProvider.handleRequest(event.request))
+    ) {
         return authProvider.getUnauthenticatedResponse();
     }
 
