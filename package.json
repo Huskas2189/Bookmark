@@ -30,7 +30,7 @@
 		"@types/node": "24.12.4",
 		"eslint": "10.4.0",
 		"eslint-config-prettier": "10.1.8",
-		"eslint-plugin-svelte": "3.17.1",
+		"eslint-plugin-svelte": "3.18.0",
 		"globals": "17.6.0",
 		"js-yaml": "4.1.1",
 		"postcss": "8.5.15",
