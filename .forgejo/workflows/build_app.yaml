@@ -189,9 +189,9 @@ jobs:
         run: |
           ./git-cliff \
             --tag "${VERSION}" \
-            --topo-order \
             --ignore-tags='^.*$' \
             -o ${CHANGELOG_FILE} \
+            --config ./.forgejo/cliff-prerelease.toml \
             origin/main..HEAD
 
       - name: Generate release changelog
@@ -203,10 +203,11 @@ jobs:
             --use-branch-tags \
             --tag-pattern '^[0-9]*\.[0-9]*\.[0-9]$' \
             --unreleased \
+            --config ./.forgejo/cliff-release.toml \
             -o ${CHANGELOG_FILE}
 
       - name: Create Release
-        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.0
+        uses: https://data.forgejo.org/actions/forgejo-release@v2.12.1
         with:
           tag: "${{ env.VERSION }}"
           token: "${{ secrets.BOOKMARK_BOT_TOKEN }}"

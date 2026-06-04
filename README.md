@@ -1,5 +1,8 @@
 # Bookmark
 
+![Latest release](https://codeberg.org/huskas-2189/Bookmark/badges/release.svg)
+![Release deploiement pipeline status](https://codeberg.org/huskas-2189/Bookmark/badges/workflows/build_app.yaml/badge.svg?branch=main&label=Release%20Pipeline)
+
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE)
 [![Svelte](https://img.shields.io/badge/Svelte-5.x-orange?logo=svelte)](https://svelte.dev/)
 [![Docker](https://img.shields.io/badge/Docker-ready-blue?logo=docker)](https://www.docker.com/)
