@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import fs from 'node:fs';
 import yaml from 'js-yaml';
-import type { BookmarkConfig } from '$lib/models/bookmark-config';
+import type { BookmarkConfig } from '$lib/server/models/bookmark-config';
 import type { App } from '$lib/models/app';
 
 export type BookmarkConfigFile = BookmarkConfig & {
@@ -47,7 +47,8 @@ export function getFileConfig(): BookmarkConfig {
         title: globalConfig.title,
         description: globalConfig.description ?? '',
         auth: globalConfig.auth ?? 'basic_auth',
-        users: globalConfig.users ?? []
+        users: globalConfig.users ?? [],
+        defaultAttrs: globalConfig.defaultAttrs ?? {}
     };
 }
 

@@ -1,7 +1,7 @@
 import type { AuthProvider } from '$lib/server/auth/auth-provider.interface';
-import { getGlobalConfig } from '$lib/server/global-config';
-import type { User } from '$lib/models/user';
+import type { User } from '$lib/server/models/user';
 import bcrypt from 'bcryptjs';
+import { getFileConfig } from '$lib/server/config/file-config';
 
 export class BasicAuth implements AuthProvider {
     private _user: User | null = null;
@@ -45,6 +45,6 @@ export class BasicAuth implements AuthProvider {
     }
 
     private _getUser(username: string): User | null {
-        return getGlobalConfig().users.find((u) => u.username === username) ?? null;
+        return getFileConfig().users.find((u) => u.username === username) ?? null;
     }
 }

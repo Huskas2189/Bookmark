@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { App } from '$lib/models/app';
     import Icon from '$lib/components/Icon.svelte';
+    import { page } from '$app/state';
+    import type { DefaultAttrs } from '$lib/models/bookmark-config';
 
     const uid = $props.id();
     const {
@@ -8,12 +10,19 @@
     }: {
         app: App;
     } = $props();
+
+    const defaultAttrs = page.data.defaultAttrs as DefaultAttrs;
 </script>
 
 <article id="{app.id}-{uid}" class="bookmark">
     <Icon icon={app.icon ?? app.id} alt={app.name}></Icon>
     <h2>
-        <a href={app.url} aria-label="Open {app.name}" rel="external">
+        <a
+            href={app.url}
+            aria-label="Open {app.name}"
+            rel="external norefferer"
+            target={app.target ?? defaultAttrs.target ?? '_self'}
+        >
             {app.name}
         </a>
     </h2>

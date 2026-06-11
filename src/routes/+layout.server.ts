@@ -7,6 +7,7 @@ export const load: LayoutServerLoad = async () => {
         title: getGlobalConfig().title,
         description: getGlobalConfig().description,
         projectName: projectName,
-        projectVersion: projectVersion
+        projectVersion: projectVersion,
+        defaultAttrs: getGlobalConfig().defaultAttrs
     };
 };
