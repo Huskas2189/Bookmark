@@ -141,6 +141,8 @@ Create a `config.yaml` file:
 title: MyBookmarks
 description: My apps are awesome
 auth: basic_auth
+defaultAttrs:
+  target: _self
 apps:
   - id: app_1
     name: App 1
@@ -175,18 +177,27 @@ Currently, the only supported value are `basic_auth` and `forward_auth`
 
 Next integrated provider will be OpenId.
 
+#### defaultAttrs
+
+Default attributes for app links.
+
+| Field    | Required | Description                                                                                                                                                                                          |
+| -------- | -------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `target` |       No | Default value for the link `target` attribute ([@see MDN doc for further information](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target).<br />Default value to "\_self" |
+
 #### apps
 
 The apps section defines the bookmarks displayed in the dashboard.
 Each app requires:
 
-| Field   | Required | Description                                              |
-| ------- | -------: | -------------------------------------------------------- |
-| `id`    |      Yes | Unique app identifier. Also used as the default icon ID. |
-| `name`  |      Yes | Display name of the app.                                 |
-| `url`   |      Yes | URL where the user will be redirected.                   |
-| `roles` |      Yes | List of roles allowed to see this app.                   |
-| `icon`  |       No | Custom icon ID. See [Icons](#icons).                     |
+| Field    | Required | Description                                                                                                                                                                                          |
+| -------- | -------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`     |      Yes | Unique app identifier. Also used as the default icon ID.                                                                                                                                             |
+| `name`   |      Yes | Display name of the app.                                                                                                                                                                             |
+| `url`    |      Yes | URL where the user will be redirected.                                                                                                                                                               |
+| `roles`  |      Yes | List of roles allowed to see this app.                                                                                                                                                               |
+| `icon`   |       No | Custom icon ID. See [Icons](#icons).                                                                                                                                                                 |
+| `target` |       No | value for the link `target` attribute ([@see MDN doc for further information](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target). Default value to `defaultAttrs.target` |
 
 Example:
 
