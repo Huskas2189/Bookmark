@@ -1,3 +1,5 @@
 @utility card {
-    @apply rounded-md border border-slate-200 shadow-md;
+    @apply rounded-md;
+    @apply border border-slate-200 dark:border-zinc-900;
+    @apply shadow-md;
 }

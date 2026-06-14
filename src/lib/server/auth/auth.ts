@@ -1,7 +1,7 @@
 import type { AuthProvider } from '$lib/server/auth/auth-provider.interface';
 import { BasicAuth } from '$lib/server/auth/provider/basic-auth';
-import { getGlobalConfig } from '$lib/server/global-config';
 import { ForwardAuth } from '$lib/server/auth/provider/forward-auth';
+import { getFileConfig } from '$lib/server/config/file-config';
 
 let authProvider: AuthProvider;
 
@@ -12,7 +12,7 @@ export function getAuthProvider(): AuthProvider {
         return authProvider;
     }
 
-    const authType = getGlobalConfig().auth;
+    const authType = getFileConfig().auth;
     switch (authType) {
         case 'basic_auth':
             authProvider = new BasicAuth();
