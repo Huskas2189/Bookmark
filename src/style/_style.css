@@ -5,3 +5,6 @@
 @import './typography.css';
 
 @plugin '@tailwindcss/typography';
+@plugin "@iconify/tailwind4";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

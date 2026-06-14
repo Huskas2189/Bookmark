@@ -1,6 +1,9 @@
 body {
     margin-top: var(--header-height);
     margin-bottom: var(--header-height);
+
+    @apply bg-white dark:bg-zinc-800;
+    @apply text-black dark:text-zinc-100;
 }
 
 @utility layout-bar {
@@ -8,7 +11,7 @@ body {
     @apply flex items-center justify-center;
     @apply backdrop-blur-lg;
     @apply z-50;
-    @apply bg-white/20;
+    @apply bg-white/20 dark:bg-zinc-600/20;
     height: var(--header-height);
 }
 

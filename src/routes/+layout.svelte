@@ -2,8 +2,20 @@
     import '../style/_style.css';
     import favicon from '$lib/assets/favicon.svg';
     import type { LayoutProps } from './$types';
+    import ThemeSelector from '$lib/components/ThemeSelector.svelte';
+    import { applicableTheme } from '$lib/stores/theme.store';
+    import { onMount } from 'svelte';
+    import { browser } from '$app/env';
 
     let { data, children }: LayoutProps = $props();
+
+    onMount(() => {
+        if (!browser) return;
+        applicableTheme.subscribe((mode) => {
+            if (!browser) return;
+            document.documentElement.setAttribute('data-theme', mode);
+        });
+    });
 </script>
 
 <svelte:head>
@@ -18,6 +30,9 @@
         {#if data.description}
             <span class="description">{data.description}</span>
         {/if}
+    </div>
+    <div class="theme-selector">
+        <ThemeSelector></ThemeSelector>
     </div>
 </header>
 <main>
@@ -39,6 +54,10 @@
             .description {
                 @apply self-end;
             }
+        }
+
+        .theme-selector {
+            @apply absolute right-4;
         }
     }
 
