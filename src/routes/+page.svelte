@@ -12,7 +12,7 @@
 </div>
 
 <style lang="postcss">
-    @reference '../style/_style.css';
+    @reference '#style';
 
     .bookmark-container {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;

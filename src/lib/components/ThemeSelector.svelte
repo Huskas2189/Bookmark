@@ -37,6 +37,7 @@
     button {
         @apply p-1;
         @apply flex items-center;
+        @apply cursor-pointer;
 
         & > span {
             @apply w-3 h-3;
