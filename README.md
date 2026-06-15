@@ -185,6 +185,17 @@ Default attributes for app links.
 | -------- | -------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `target` |       No | Default value for the link `target` attribute ([@see MDN doc for further information](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target).<br />Default value to "\_self" |
 
+#### groups
+
+Define groups to group apps
+
+| Field   | Required | Description                 |
+| ------- | -------: | --------------------------- |
+| `id`    |      Yes | Unique group identifier.    |
+| `label` |      Yes | Display label of the group. |
+
+If you don't want to display apps sorted by group, remove the field.
+
 #### apps
 
 The apps section defines the bookmarks displayed in the dashboard.
@@ -198,6 +209,7 @@ Each app requires:
 | `roles`  |      Yes | List of roles allowed to see this app.                                                                                                                                                               |
 | `icon`   |       No | Custom icon ID. See [Icons](#icons).                                                                                                                                                                 |
 | `target` |       No | value for the link `target` attribute ([@see MDN doc for further information](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a#target). Default value to `defaultAttrs.target` |
+| `group`  |       No | Group of the app. [@see #groups](#groups). If `groups` is not defined, this field is useless.                                                                                                        |
 
 Example:
 
@@ -209,6 +221,8 @@ apps:
     roles:
       - admin
       - media
+    target: _blank
+    group: my_group
 ```
 
 Apps can also be configured with docker labels. [See labels](#docker-labels)
@@ -249,14 +263,16 @@ users:
 
 Apps can be defined with docker labels.
 
-| Label              | Required | Description                                                 |
-| ------------------ | -------- | ----------------------------------------------------------- |
-| bookmark.enabled   | true     | Enable labels for the given container                       |
-| bookmark.app.id    | true     | Unique app identifier. Also used as the default icon ID.    |
-| bookmark.app.name  | true     | Display name of the app.                                    |
-| bookmark.app.url   | true     | URL where the user will be redirected.                      |
-| bookmark.app.roles | true     | List of roles allowed to see this app, separate by a comma. |
-| bookmark.app.icon  | false    | Custom icon ID. See [Icons](#icons).                        |
+| Label               | Required | Description                                                 |
+| ------------------- | -------- | ----------------------------------------------------------- |
+| bookmark.enabled    | true     | Enable labels for the given container                       |
+| bookmark.app.id     | true     | Unique app identifier. Also used as the default icon ID.    |
+| bookmark.app.name   | true     | Display name of the app.                                    |
+| bookmark.app.url    | true     | URL where the user will be redirected.                      |
+| bookmark.app.roles  | true     | List of roles allowed to see this app, separate by a comma. |
+| bookmark.app.icon   | false    | Custom icon ID. See [Icons](#icons).                        |
+| bookmark.app.target | false    | Target field.                                               |
+| bookmark.app.group  | false    | App group.                                                  |
 
 example:
 
@@ -274,6 +290,8 @@ services:
       - 'bookmark.app.name=My web App'
       - 'bookmark.app.url=http://localhost:8000'
       - 'bookmark.app.roles=bookmark_admin'
+      - 'bookmark.app.target=_blank'
+      - 'bookmark.app.group=my_group'
 ```
 
 ### Hash Passwords

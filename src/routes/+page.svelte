@@ -1,24 +1,47 @@
 <script lang="ts">
     import type { PageProps } from './$types';
+    import type { App as AppModel } from '$lib/models/app';
     import App from '$lib/components/App.svelte';
 
     let { data }: PageProps = $props();
 </script>
 
-<div class="bookmark-container">
-    {#each data.apps as app (app.id)}
-        <App {app}></App>
-    {/each}
-</div>
+{#snippet appgroup(apps: AppModel[])}
+    <div class="bookmark-container">
+        {#each apps as app (app.id)}
+            <App {app}></App>
+        {/each}
+    </div>
+{/snippet}
+
+{#if data.groups.length}
+    <div class="groups">
+        {#each data.groups as group (group.id)}
+            {@const groupApps = data.apps.filter((app) => app.group === group.id)}
+            {#if groupApps.length}
+                <div class="group">
+                    <h2>{group.label}</h2>
+                    {@render appgroup(groupApps)}
+                </div>
+            {/if}
+        {/each}
+    </div>
+{:else}
+    {@render appgroup(data.apps)}
+{/if}
 
 <style lang="postcss">
     @reference '#style';
 
+    .groups {
+        @apply flex flex-col;
+    }
+
     .bookmark-container {
         @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
-        @apply py-6;
         @apply place-content-center;
+
+        @apply py-3;
         @apply gap-4;
-        @apply mx-auto;
     }
 </style>

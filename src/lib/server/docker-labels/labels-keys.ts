@@ -7,3 +7,5 @@ export const BOOKMARK_APP_NAME = `${BOOKMARK_APP_PREFIX}.name`;
 export const BOOKMARK_APP_URL = `${BOOKMARK_APP_PREFIX}.url`;
 export const BOOKMARK_APP_ROLES = `${BOOKMARK_APP_PREFIX}.roles`;
 export const BOOKMARK_APP_ICON = `${BOOKMARK_APP_PREFIX}.icon`;
+export const BOOKMARK_APP_TARGET = `${BOOKMARK_APP_PREFIX}.target`;
+export const BOOKMARK_APP_GROUP = `${BOOKMARK_APP_PREFIX}.group`;

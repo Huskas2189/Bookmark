@@ -28,3 +28,4 @@ services:
       - "bookmark.app.name=Httpd"
       - "bookmark.app.url=http://localhost:8000"
       - "bookmark.app.roles=bookmark_admin"
+      - "bookmark.app.group=admin"

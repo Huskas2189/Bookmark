@@ -35,7 +35,8 @@
     @reference '#style';
 
     main {
-        @apply flex items-center;
+        @apply flex items-center justify-center;
+        @apply py-3;
         min-height: calc(100vh - calc(2 * var(--header-height)));
     }
 </style>

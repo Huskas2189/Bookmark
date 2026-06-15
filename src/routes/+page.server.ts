@@ -1,18 +1,16 @@
 import type { PageServerLoad } from './$types';
 import { getAuthProvider } from '$lib/server/auth/auth';
 import type { User } from '$lib/models/user';
-import { getApps } from '$lib/server/apps/apps';
+import { getApps, getGroups } from '$lib/server/apps/apps';
 
 export const load: PageServerLoad = async () => {
-    const authProvider = getAuthProvider();
-    const user = authProvider.getConnectedUser() as User;
-
-    const apps = (await getApps()).filter((app) => {
-        const groupSet = new Set(user.roles);
-        return app.roles.some((role) => groupSet.has(role));
-    });
+    const user = getAuthProvider().getConnectedUser() as User;
 
     return {
-        apps: apps
+        groups: await getGroups(),
+        apps: (await getApps()).filter((app) => {
+            const groupSet = new Set(user.roles);
+            return app.roles.some((role) => groupSet.has(role));
+        })
     };
 };

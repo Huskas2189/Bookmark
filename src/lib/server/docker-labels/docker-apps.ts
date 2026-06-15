@@ -1,9 +1,11 @@
-import type { App } from '$lib/models/app';
+import type { App, Target } from '$lib/models/app';
 import {
+    BOOKMARK_APP_GROUP,
     BOOKMARK_APP_ICON,
     BOOKMARK_APP_ID,
     BOOKMARK_APP_NAME,
     BOOKMARK_APP_ROLES,
+    BOOKMARK_APP_TARGET,
     BOOKMARK_APP_URL,
     BOOKMARK_ENABLED
 } from '$lib/server/docker-labels/labels-keys';
@@ -30,7 +32,9 @@ export async function getDockerApps(): Promise<App[]> {
                                 .map((label) => label.trim())
                                 .filter(Boolean),
                             url: container.Labels[BOOKMARK_APP_URL],
-                            icon: container.Labels[BOOKMARK_APP_ICON] ?? null
+                            icon: container.Labels[BOOKMARK_APP_ICON] ?? null,
+                            target: (container.Labels[BOOKMARK_APP_TARGET] as Target) ?? '_self',
+                            group: container.Labels[BOOKMARK_APP_GROUP] ?? null
                         });
                     } catch (e: unknown) {
                         if (e instanceof Error) {

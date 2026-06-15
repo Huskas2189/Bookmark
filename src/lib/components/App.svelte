@@ -16,16 +16,14 @@
 
 <article id="{app.id}-{uid}" class="bookmark">
     <Icon icon={app.icon ?? app.id} alt={app.name}></Icon>
-    <h2>
-        <a
-            href={app.url}
-            aria-label="Open {app.name}"
-            rel="external norefferer"
-            target={app.target ?? defaultAttrs.target ?? '_self'}
-        >
-            {app.name}
-        </a>
-    </h2>
+    <a
+        href={app.url}
+        aria-label="Open {app.name}"
+        rel="external norefferer"
+        target={app.target ?? defaultAttrs.target ?? '_self'}
+    >
+        {app.name}
+    </a>
 </article>
 
 <style lang="postcss">
@@ -45,11 +43,8 @@
             @apply shadow-lg/20;
         }
 
-        h2 {
-            @apply p-2 pb-0;
-        }
-
         a {
+            @apply p-2 pb-0;
             &::after {
                 content: '';
                 position: absolute;

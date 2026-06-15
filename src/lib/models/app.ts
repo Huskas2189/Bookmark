@@ -7,4 +7,5 @@ export type App = {
     icon?: string;
     roles: string[];
     target?: Target;
+    group?: string;
 };

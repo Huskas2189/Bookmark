@@ -1,6 +1,11 @@
 import type { App } from '$lib/models/app';
-import { getFileApps } from '$lib/server/config/file-config';
+import type { Group } from '$lib/models/group';
+import { getFileApps, getFileGroups } from '$lib/server/config/file-config';
 
 export async function getApps(): Promise<App[]> {
     return getFileApps();
+}
+
+export async function getGroups(): Promise<Group[]> {
+    return getFileGroups();
 }

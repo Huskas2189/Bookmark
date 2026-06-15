@@ -3,9 +3,11 @@ import fs from 'node:fs';
 import yaml from 'js-yaml';
 import type { BookmarkConfig } from '$lib/server/models/bookmark-config';
 import type { App } from '$lib/models/app';
+import type { Group } from '$lib/models/group';
 
 export type BookmarkConfigFile = BookmarkConfig & {
     apps: App[];
+    groups: Group[];
 };
 
 /**
@@ -56,4 +58,10 @@ export function getFileApps(): App[] {
     const globalConfig = getGlobalConfig();
 
     return globalConfig.apps ?? [];
+}
+
+export function getFileGroups(): Group[] {
+    const globalConfig = getGlobalConfig();
+
+    return globalConfig.groups ?? [];
 }

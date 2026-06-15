@@ -1,0 +1,5 @@
+export type Group = {
+    id: string;
+    label: string;
+    weight: number;
+};
