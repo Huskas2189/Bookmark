@@ -1,5 +1,5 @@
 # node:lts-alpine3.23
-FROM node:lts-alpine3.23@sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14 AS upstream
+FROM node:lts-alpine3.23@sha256:7c078d435026a97c8ff97b00d70e2f6ec6298a440e25a9485a9af414d5d37009 AS upstream
 
 ARG VERSION
 
