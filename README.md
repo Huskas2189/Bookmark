@@ -143,12 +143,16 @@ description: My apps are awesome
 auth: basic_auth
 defaultAttrs:
   target: _self
+groups:
+  - id: apps
+    label: Apps
 apps:
   - id: app_1
     name: App 1
     url: https://app1.yourdomain.org
     roles:
       - admin
+    group: apps
 
 users:
   - username: your_user
@@ -263,16 +267,15 @@ users:
 
 Apps can be defined with docker labels.
 
-| Label               | Required | Description                                                 |
-| ------------------- | -------- | ----------------------------------------------------------- |
-| bookmark.enabled    | true     | Enable labels for the given container                       |
-| bookmark.app.id     | true     | Unique app identifier. Also used as the default icon ID.    |
-| bookmark.app.name   | true     | Display name of the app.                                    |
-| bookmark.app.url    | true     | URL where the user will be redirected.                      |
-| bookmark.app.roles  | true     | List of roles allowed to see this app, separate by a comma. |
-| bookmark.app.icon   | false    | Custom icon ID. See [Icons](#icons).                        |
-| bookmark.app.target | false    | Target field.                                               |
-| bookmark.app.group  | false    | App group.                                                  |
+| Label                    | Required | Description                                                 |
+| ------------------------ | -------- | ----------------------------------------------------------- |
+| bookmark.enabled         | true     | Enable labels for the given container                       |
+| bookmark.app.{id}.name   | true     | Display name of the app.                                    |
+| bookmark.app.{id}.url    | true     | URL where the user will be redirected.                      |
+| bookmark.app.{id}.roles  | true     | List of roles allowed to see this app, separate by a comma. |
+| bookmark.app.{id}.icon   | false    | Custom icon ID. See [Icons](#icons).                        |
+| bookmark.app.{id}.target | false    | Target field.                                               |
+| bookmark.app.{id}.group  | false    | App group.                                                  |
 
 example:
 
@@ -285,13 +288,12 @@ services:
       - '8000:80'
     labels:
       - 'bookmark.enabled=true'
-      - 'bookmark.app.id=httpd'
-      - 'bookmark.app.icon=apache'
-      - 'bookmark.app.name=My web App'
-      - 'bookmark.app.url=http://localhost:8000'
-      - 'bookmark.app.roles=bookmark_admin'
-      - 'bookmark.app.target=_blank'
-      - 'bookmark.app.group=my_group'
+      - 'bookmark.app.httpd.icon=apache'
+      - 'bookmark.app.httpd.name=My web App'
+      - 'bookmark.app.httpd.url=http://localhost:8000'
+      - 'bookmark.app.httpd.roles=bookmark_admin'
+      - 'bookmark.app.httpd.target=_blank'
+      - 'bookmark.app.httpd.group=my_group'
 ```
 
 ### Hash Passwords
