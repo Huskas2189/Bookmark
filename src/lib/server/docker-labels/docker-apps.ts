@@ -58,7 +58,7 @@ export async function getDockerApps(): Promise<App[]> {
                                 target:
                                     (container.Labels[
                                         `${BOOKMARK_APP}.${id}.${BOOKMARK_APP_TARGET}`
-                                    ] as Target) ?? '_self',
+                                    ] as Target) ?? null,
                                 group:
                                     container.Labels[
                                         `${BOOKMARK_APP}.${id}.${BOOKMARK_APP_GROUP}`

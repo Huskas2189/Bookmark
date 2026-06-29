@@ -1,4 +1,8 @@
 ---
+# This is the dev compose.yaml
+# This docker compose configuration is not meant to be used in a prod environment
+# @see https://codeberg.org/huskas-2189/Bookmark#docker-compose for a production configuration.
+
 name: bookmark
 
 services:
